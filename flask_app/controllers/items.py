@@ -6,6 +6,9 @@ from flask_app.models import trip, list, item
 def add_item() -> None:
     if session.get('logged_in'):
         if request.method == "GET":
+            if not session.get('add_new_item'):
+                flash('Please select a List before adding Items!', 'unauthorized_minor')
+                return redirect(url_for('show_all_trips'))
             if session.get('item_attempt'):
                 pre_fill = {
                     'name': session['item_attempt']['name'],

@@ -34,6 +34,13 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
+        {% with messages = get_flashed_messages(category_filter=['unauthorized_minor']) %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="form-text text-danger mb-3 fs-4">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
         <div class="card mb-3">
             <span class="card-header h2 fs-3 border-bottom border-5">All Trips</span>
             <div class="card-body">
