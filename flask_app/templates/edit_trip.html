@@ -70,8 +70,8 @@
                     </div>
 
                     <div class="form-floating mb-3">
-                        <label class="form-label" for="days">Number of Days:</label>
                         <input class="form-control" type="number" name="days" id="days" value="{{pre_fill['days']}}" placeholder="">
+                        <label class="form-label" for="days">Number of Days:</label>
                         {% with messages = get_flashed_messages(category_filter=['days']) %}
                             {% if messages %}
                                 {% for message in messages %}
