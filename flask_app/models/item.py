@@ -12,8 +12,6 @@ class Item:
         self.quantity = data['quantity']
         # self.is_packed = data['is_packed']
         self.list_id = data['list_id']
-        self.created_at = data['created_at']
-        self.updated_at = data['updated_at']
 
     def __repr__(self) -> str:
         return f'Item: {self.name}'

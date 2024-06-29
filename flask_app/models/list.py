@@ -9,13 +9,11 @@ class List:
         self.id = data['id']
         self.name = data['name']
         self.trip_id = data['trip_id']
-        self.created_at = data['created_at']
-        self.updated_at = data['updated_at']
         self.trip = {}
         self.items = []
 
     def __repr__(self) -> str:
-        return f'List ~ {self.name}, id ~ {self.id}'
+        return f'List & id: {self.name} {self.id}, \n Items: {self.items}'
 
     @classmethod
     def get_all (cls):
@@ -32,8 +30,6 @@ class List:
                 'name': list['name'],
                 'location': list['location'],
                 'date': list['date'],
-                'created_at': list['trips.created_at'],
-                'updated_at': list['trips.updated_at'],
             }
             this_list_trip = trip.Trip(trip_data)
             this_list.trip = this_list_trip

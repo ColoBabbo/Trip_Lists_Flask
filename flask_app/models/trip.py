@@ -12,13 +12,11 @@ class Trip:
         self.location = data['location']
         self.date = data['date']
         self.days = data['days']
-        self.created_at = data['created_at']
-        self.updated_at = data['updated_at']
         self.user = {}
         self.lists = {}
 
     def __repr__(self) -> str:
-        return f'Trip {self.name}, self.user = {self.user.first_name}'
+        return f'Trip {self.name}, self.lists = {self.lists}'
 
     @classmethod
     def get_all(cls) -> list:
@@ -35,8 +33,6 @@ class Trip:
                 'first_name': trip['first_name'],
                 'last_name': trip['last_name'],
                 'email': trip['email'],
-                'created_at': trip['users.created_at'],
-                'updated_at': trip['users.updated_at'],
             }
             this_trip_user = user.User(user_data)
             this_trip.user = this_trip_user
@@ -61,20 +57,15 @@ class Trip:
                 'first_name': this_result['first_name'],
                 'last_name': this_result['last_name'],
                 'email': this_result['email'],
-                'created_at': this_result['users.created_at'],
-                'updated_at': this_result['users.updated_at'],
             }
             this_trip_user = user.User(user_data)
             this_trip.user = this_trip_user
-
             for each_list in results:
-                if each_list['id'] not in this_trip.lists:
+                if each_list['list_id'] not in this_trip.lists:
                     list_data = {
                         'id': each_list['lists.id'],
                         'name': each_list['lists.name'],
                         'trip_id': each_list['trip_id'],
-                        'created_at': each_list['lists.created_at'],
-                        'updated_at': each_list['lists.updated_at'],
                     }
                     this_trip_list = list.List(list_data)
                     this_trip.lists[this_trip_list.id] = this_trip_list
@@ -85,12 +76,9 @@ class Trip:
                         'unit': each_list['unit'],
                         'quantity': each_list['quantity'],
                         'list_id': each_list['list_id'],
-                        'created_at': each_list['items.created_at'],
-                        'updated_at': each_list['items.updated_at'],
                     }
                     this_trip_item = item.Item(item_data)
                     this_trip.lists[this_trip_list.id].items.append(this_trip_item)
-                    print(this_trip.lists[this_trip_list.id].items)
                 else:
                     item_data = {
                         'id': each_list['items.id'],
@@ -98,13 +86,9 @@ class Trip:
                         'unit': each_list['unit'],
                         'quantity': each_list['quantity'],
                         'list_id': each_list['list_id'],
-                        'created_at': each_list['items.created_at'],
-                        'updated_at': each_list['items.updated_at'],
                     }
                     existing_trip_item = item.Item(item_data)
-                    this_trip.lists[each_list['id']].items.append(existing_trip_item)
-
-                    print(this_trip.lists[each_list['id']].items)
+                    this_trip.lists[each_list['list_id']].items.append(existing_trip_item)
             return this_trip
         else:
             return False
@@ -132,7 +116,6 @@ class Trip:
 
     @classmethod
     def insert_one(cls, form_dict:dict) -> int:
-        print('WE MADE IT INTO INSERT ONE!')
         query = """
                 INSERT INTO trips (name, days, location, date, user_id)
                 VALUES (%(name)s, %(days)s, %(location)s, %(date)s, %(user_id)s);

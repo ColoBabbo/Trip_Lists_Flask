@@ -74,10 +74,11 @@
                                             </div>
                                         </td>
                                     </tr>
-                                    {% if list.items|length < 0 %}
+                                    <p>{{list.items}}</p>
+                                    {% if list.items|length > 0 %}
                                         <tr>
-                                            <table>
-                                                <tbody>
+                                            {# <table>
+                                                <tbody> #}
                                                     {% for item in list.items %}
                                                         <tr>
                                                             <td>
@@ -85,8 +86,8 @@
                                                             </td>
                                                         </tr>
                                                     {% endfor %}
-                                                </tbody>
-                                            </table>
+                                                {# </tbody>
+                                            </table> #}
                                         </tr>
                                     {% endif %}
                                 {% endfor %}
