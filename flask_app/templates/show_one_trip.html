@@ -59,6 +59,49 @@
                         <p class=""><strong>Trip Date:</strong></p>
                         <p class="">{{this_trip.date.strftime('%B %d, %Y')}}</p>
                     </div>
+                    {# <div class="">
+                        <p class=""><strong>
+                            {% if this_trip.user.id == session['current_login'] %}
+                                Your
+                            {% else %}
+                                {{this_trip.user.first_name}}'s
+                            {% endif %}
+                            Date:</strong></p>
+                        <p class="">{{this_trip.date}}</p>
+                    </div> #}
+                </div>
+            </div>
+            <div class="card mb-3">
+                <span class="card-header h2 fs-3 border-bottom border-5">Lists</span>
+                <div class="card-body">
+                    {% if this_trip.lists %}
+                        <table class="table text-center">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    {# <th>Location</th>
+                                    <th>Trip Date</th> #}
+                                    <th>More</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for list in this_trip.lists %}
+                                    <tr>
+                                        <td class=""><a href="#" class="text-decoration-none text-primary fs-6 fw-bold">{{list.name|capitalize}}</a></td>
+                                        {# <td>{{trip.location|capitalize}}</td>
+                                        <td>{{trip.date.strftime('%B %d, %Y')}}</td> #}
+                                        <td>
+                                            <a href="#" class="btn btn-outline-success py-0 px-2">Details</a>
+                                            {# {% if trip.user_id == session['current_login'] %} #}
+                                                <a href="#" class="btn btn-outline-info py-0 px-2">Edit</a>
+                                                <a href="#" class="btn btn-outline-danger py-0 px-2">Delete</a>
+                                            {# {% endif %} #}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
                     <form action="{{url_for('add_list')}}" method="post">
                         <label for="list_name" class="form-label">Add a List</label>
                         <div class="input-group mb-3">
@@ -72,19 +115,9 @@
                                 {% endfor %}
                             {% endif %}
                         {% endwith %}
-
                         <input type="hidden" name="trip_id" value="{{this_trip.id}}">
                     </form>
-                    {# <div class="">
-                        <p class=""><strong>
-                            {% if this_trip.user.id == session['current_login'] %}
-                                Your
-                            {% else %}
-                                {{this_trip.user.first_name}}'s
-                            {% endif %}
-                            Date:</strong></p>
-                        <p class="">{{this_trip.date}}</p>
-                    </div> #}
+
                 </div>
             </div>
 
