@@ -6,7 +6,6 @@ from flask_app.models import trip
 def show_all_trips():
     if session.get('logged_in'):
         all_trips = trip.Trip.get_all()
-        # print(all_trips)
         return render_template('show_all_trips.html', all_trips = all_trips)
     else:
         flash('Please Login', 'login')
@@ -19,7 +18,15 @@ def show_one_trip(trip_id:int):
         if this_trip == False:
             flash('No such record!', 'unauthorized')
             return redirect(url_for('show_all_trips'))
-        return render_template('show_one_trip.html', this_trip = this_trip)
+        if session.get('list_attempt'):
+            pre_fill = {
+                'list_name': session['list_attempt']['list_name'],
+            }
+        else:
+            pre_fill = {
+                'list_name': '',
+            }
+        return render_template('show_one_trip.html', this_trip = this_trip, pre_fill = pre_fill)
     else:
         flash('Please Login', 'login')
     return redirect('/')

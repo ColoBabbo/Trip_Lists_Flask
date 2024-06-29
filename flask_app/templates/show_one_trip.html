@@ -56,10 +56,26 @@
                         <p class="">{{this_trip.location}}</p>
                     </div>
                     <div class="d-flex gap-3">
-                        <p class=""><strong>Release Date:</strong></p>
+                        <p class=""><strong>Trip Date:</strong></p>
                         <p class="">{{this_trip.date.strftime('%B %d, %Y')}}</p>
                     </div>
-                    <div class="">
+                    <form action="{{url_for('add_list')}}" method="post">
+                        <label for="list_name" class="form-label">Add a List</label>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="list_name" name="list_name" value="{{pre_fill['list_name']}}" placeholder="List Name">
+                            <button class="btn btn-outline-primary" type="submit">Create</button>
+                        </div>
+                        {% with messages = get_flashed_messages(category_filter=['list_name']) %}
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="form-text text-danger ps-3">{{ message }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+
+                        <input type="hidden" name="trip_id" value="{{this_trip.id}}">
+                    </form>
+                    {# <div class="">
                         <p class=""><strong>
                             {% if this_trip.user.id == session['current_login'] %}
                                 Your
@@ -68,7 +84,7 @@
                             {% endif %}
                             Date:</strong></p>
                         <p class="">{{this_trip.date}}</p>
-                    </div>
+                    </div> #}
                 </div>
             </div>
 
