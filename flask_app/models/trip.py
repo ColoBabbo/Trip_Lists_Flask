@@ -1,6 +1,6 @@
 from flask import flash
 from flask_app.config.mysqlconnection import connectToMySQL
-from flask_app.models import list, user
+from flask_app.models import list, user, item
 
 class Trip:
     db = 'trip_lists_flask_db'
@@ -15,7 +15,7 @@ class Trip:
         self.created_at = data['created_at']
         self.updated_at = data['updated_at']
         self.user = {}
-        self.lists = []
+        self.lists = {}
 
     def __repr__(self) -> str:
         return f'Trip {self.name}, self.user = {self.user.first_name}'
@@ -49,6 +49,7 @@ class Trip:
                 SELECT * FROM trips
                 LEFT JOIN users ON trips.user_id = users.id
                 LEFT JOIN lists ON lists.trip_id = trips.id
+                LEFT JOIN items ON items.list_id = lists.id
                 WHERE trips.id = %(id)s;
         """
         results = connectToMySQL(cls.db).query_db(query, {'id': trip_id})
@@ -67,16 +68,43 @@ class Trip:
             this_trip.user = this_trip_user
 
             for each_list in results:
-                list_data = {
-                    'id': each_list['lists.id'],
-                    'name': each_list['lists.name'],
-                    'trip_id': each_list['trip_id'],
-                    'created_at': each_list['lists.created_at'],
-                    'updated_at': each_list['lists.updated_at'],
-                }
-                this_trip_list = list.List(list_data)
-                this_trip.lists.append(this_trip_list)
+                if each_list['id'] not in this_trip.lists:
+                    list_data = {
+                        'id': each_list['lists.id'],
+                        'name': each_list['lists.name'],
+                        'trip_id': each_list['trip_id'],
+                        'created_at': each_list['lists.created_at'],
+                        'updated_at': each_list['lists.updated_at'],
+                    }
+                    this_trip_list = list.List(list_data)
+                    this_trip.lists[this_trip_list.id] = this_trip_list
 
+                    item_data = {
+                        'id': each_list['items.id'],
+                        'name': each_list['items.name'],
+                        'unit': each_list['unit'],
+                        'quantity': each_list['quantity'],
+                        'list_id': each_list['list_id'],
+                        'created_at': each_list['items.created_at'],
+                        'updated_at': each_list['items.updated_at'],
+                    }
+                    this_trip_item = item.Item(item_data)
+                    this_trip.lists[this_trip_list.id].items.append(this_trip_item)
+                    print(this_trip.lists[this_trip_list.id].items)
+                else:
+                    item_data = {
+                        'id': each_list['items.id'],
+                        'name': each_list['items.name'],
+                        'unit': each_list['unit'],
+                        'quantity': each_list['quantity'],
+                        'list_id': each_list['list_id'],
+                        'created_at': each_list['items.created_at'],
+                        'updated_at': each_list['items.updated_at'],
+                    }
+                    existing_trip_item = item.Item(item_data)
+                    this_trip.lists[each_list['id']].items.append(existing_trip_item)
+
+                    print(this_trip.lists[each_list['id']].items)
             return this_trip
         else:
             return False

@@ -36,7 +36,7 @@
                     <div class="d-flex gap-2">
                         {% if this_trip.user_id == session['current_login'] %}
                             <a href="{{url_for('edit_trip', trip_id = this_trip.id)}}" class="btn btn-outline-info py-0 px-2">Edit</a>
-                            <a href="{{url_for('delete_trip', trip_id = this_trip.id)}}" class="btn btn-outline-danger py-0 px-2">Delete Trip</a>
+                            <a href="{{url_for('delete_trip', trip_id = this_trip.id)}}" class="btn btn-outline-danger py-0 px-2">Delete</a>
                         {% endif %}
                     </div>
                 </div>
@@ -54,24 +54,18 @@
             <div class="card mb-3">
                 <span class="card-header h2 fs-3 border-bottom border-5">Lists</span>
                 <div class="card-body pt-1">
+                    {# <p>{{this_trip.lists}}</p> #}
                     {% if this_trip.lists %}
                         <table class="table mb-0 ">
                             <tbody>
                                 {% for list in this_trip.lists.values() %}
+                                    {# <p>{{list.name}}</p> #}
                                     <tr>
                                         <td class=""><a href="#" class="text-decoration-none text-primary fs-6 fw-bold">{{list.name|capitalize}}</a></td>
                                         <td class="text-end">
-                                            <div class="d-flex gap-2 justify-content-end">
-                                                <form action="{{url_for('add_item') }}" method="post">
-                                                    <input type="hidden" name="trip_id" value="{{this_trip.id}}">
-                                                    <input type="hidden" name="list_id" value="{{list.id}}">
-                                                    <input type="hidden" name="from_list_button" value="True">
-                                                    <button type="submit" class="btn btn-outline-success py-0 px-2">Add Item</button>
-                                                </form>
-                                                <div>
-                                                <a href="#" class="btn btn-outline-danger py-0 px-2">Delete List</a>
-                                                </div>
-                                            </div>
+                                            <a href="#" class="btn btn-outline-success py-0 px-2">Details</a>
+                                            <a href="#" class="btn btn-outline-info py-0 px-2">Edit</a>
+                                            <a href="#" class="btn btn-outline-danger py-0 px-2">Delete</a>
                                         </td>
                                     </tr>
                                     {% if list.items|length < 0 %}
@@ -95,6 +89,7 @@
                     {% endif %}
 
                     <form action="{{url_for('add_list')}}" method="post" class="mt-3">
+                        {# <label for="list_name" class="form-label mb-0">Add a List</label> #}
                         <div class="input-group">
                             <input type="text" class="form-control border-primary" id="list_name" name="list_name" value="{{pre_fill['list_name']}}" placeholder="Add a List">
                             <button class="btn btn-outline-primary" type="submit">Create</button>
