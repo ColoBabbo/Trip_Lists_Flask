@@ -1,0 +1,13 @@
+{
+    "material-icon-theme.languages.associations": {
+        "jinja-html": "html"
+    },
+    "files.associations": {
+        "*.html": "jinja-html"
+    },
+    "emmet.includeLanguages": {
+        "jinja-html": "html"
+    },
+    "python.analysis.typeCheckingMode": "off",
+    "python.analysis.autoImportCompletions": false
+}

@@ -14,12 +14,12 @@
         <nav class="navbar mb-3 py-0">
             <div class="container d-flex justify-content-between px-3">
                 <div class="pb-1">
-                    <h1 class="navbar-brand text-danger-emphasis pb-0" >NEXTFIX</h1>
+                    <h1 class="navbar-brand text-danger-emphasis pb-0" >Trip Lists</h1>
                     <a class="text-decoration-none text-reset" href="/user/{{session['current_login']}}">Welcome {{session.get('first_name')}}!</a>
                 </div>
                 <nav class="nav nav-underline justify-content-end align-items-center" id="navbarNavAltMarkup">
-                    <a class="nav-link" href="{{ url_for('show_all_shows') }}">All Shows</a>
-                    <a href="/add_show" class="nav-link">Create New</a>
+                    <a class="nav-link" href="{{ url_for('show_all_trips') }}">All Trips</a>
+                    <a href="/add_trip" class="nav-link">Create New</a>
                     <a href="/user/logout" class="btn btn-outline-warning">Logout</a>
                 </nav>
             </div>
