@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request, session, url_for, flash
+from flask import render_template, redirect, request, session, url_for, flash, jsonify
 from flask_app import app
 from flask_app.models import trip, item
 
@@ -100,3 +100,6 @@ def delete_item(trip_id:int, list_id:int, item_id:int) -> None:
         flash('Please Login', 'login')
     return redirect('/')
 
+@app.route('/get_checks')
+def get_checks():
+    return jsonify()
