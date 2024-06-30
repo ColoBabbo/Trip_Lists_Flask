@@ -59,3 +59,12 @@ class List:
             flash('Name must be at least 3 characters.', 'list_name')
             valid_input = False
         return valid_input
+
+    @classmethod
+    def delete_one(cls, list_id:int) -> None:
+        query = """
+                DELETE FROM lists
+                WHERE id = %(id)s;
+        """
+        return connectToMySQL(cls.db).query_db(query, {"id": list_id})
+
