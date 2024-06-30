@@ -1,16 +1,15 @@
 from flask import render_template, redirect, request, session, url_for, flash, jsonify
 from flask_app import app
-from flask_app.models import trip, trip_json
+from flask_app.models import trip
 
 @app.route('/trip/<int:trip_id>/json')
 def show_one_trip_json(trip_id:int):
     if session.get('logged_in'):
-        this_trip = trip_json.Trip_JSON.get_one(trip_id)
-        return jsonify({'this_trip_JSON' : this_trip})
+        this_trip = trip.Trip.get_one_json(trip_id)
+        return jsonify({'this_trip_json' : this_trip})
     else:
         flash('Please Login', 'login')
     return redirect('/')
-
 
 @app.get('/trip/<int:trip_id>')
 def show_one_trip(trip_id:int):

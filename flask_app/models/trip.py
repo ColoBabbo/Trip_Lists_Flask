@@ -19,6 +19,23 @@ class Trip:
         return f'Trip {self.name}, self.lists = {self.lists}'
 
     @classmethod
+    def get_one_json(cls, trip_id:int) -> object:
+        query = """
+                SELECT trips.id, trips.name, date, days, location, 
+                    user_id, users.id, first_name, last_name, email, 
+                    lists.id, lists.name, trip_id, 
+                    items.id, items.name, unit, quantity, list_id, is_packed 
+                FROM trips
+                LEFT JOIN users ON trips.user_id = users.id
+                LEFT JOIN lists ON lists.trip_id = trips.id
+                LEFT JOIN items ON items.list_id = lists.id
+                WHERE trips.id = %(id)s;
+        """
+        results = connectToMySQL(cls.db).query_db(query, {'id': trip_id})
+        print(results)
+        return results
+
+    @classmethod
     def get_all(cls) -> list:
         query = """
                 SELECT * FROM trips

@@ -1,14 +1,13 @@
-function get_one_JSON( trip_id ){
+async function get_one_trip_json( trip_id ){
     fetch(`http://localhost:5000/trip/${trip_id}/json`)
         .then( response => response.json() )
-        .then( results => parse_JSON_for_one_trip(results) )
-    
+        .then( results => parse_json_for_one_trip(results) )
 }
-get_one_JSON(trip_id);
+get_one_trip_json(trip_id)
 
-async function parse_JSON_for_one_trip (results)  {
+async function parse_json_for_one_trip (results)  {
     console.log(results)
-    let data  = results.this_trip_JSON
+    let data  = results.this_trip_json
     let this_trip = {
         id : data[0].id,
         name : data[0].name,

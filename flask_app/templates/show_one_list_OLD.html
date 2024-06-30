@@ -76,6 +76,27 @@
                 <div class="card-body pt-0">
                     <table class="table mb-0 ">
                         <tbody id="items_table">
+                            {% for item in this_trip.lists[list_id].items %}
+                                {% if this_trip.lists[list_id].items[0].name != None %}
+                                <tr>
+                                    <td class="">
+                                        <a href="{{url_for('show_one_item', trip_id = this_trip.id, list_id = list_id, item_id = item.id)}}" class="text-decoration-none text-primary fs-5 fw-bold">
+                                            {{item.name|capitalize}}
+                                        </a>
+                                    </td>
+                                    <td class="text-end">
+                                        <form action="" class="">
+                                            <div class="">
+                                                <input class="form-check-input me-2" type="checkbox" name="is_packed" id="is_packed" {{'checked' if pre_fill['is_packed'] else ''}} placeholder="">
+                                                <label class="form-label mb-0" for="is_packed">Packed</label>
+                                            </div>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                    <span class="text-secondary">List empty</span>
+                                {% endif %}
+                            {% endfor %}
                         </tbody>
                     </table>
 
