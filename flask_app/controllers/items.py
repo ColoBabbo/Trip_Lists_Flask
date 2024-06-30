@@ -99,7 +99,3 @@ def delete_item(trip_id:int, list_id:int, item_id:int) -> None:
     else:
         flash('Please Login', 'login')
     return redirect('/')
-
-@app.route('/get_checks')
-def get_checks():
-    return jsonify()

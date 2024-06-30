@@ -7,9 +7,6 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script>
-        let trip_id = {{ this_trip.id|tojson }}
-    </script>
     <script src="{{url_for ('static', filename='/js/script.js')}}" defer></script>
     <title>{{this_trip.name}}</title>
 </head>
@@ -65,7 +62,42 @@
             <div class="card-body pt-1">
                 {% if this_trip.lists %}
                     <table class="table mb-0 ">
-                        <tbody id="lists_table">
+                        <tbody id="lists_table">  {# HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH #}
+                            {% for list in this_trip.lists.values() %}
+                                <tr>
+                                    <td class="">
+                                        <a href="{{url_for('show_one_list', trip_id = this_trip.id, list_id = list.id)}}" 
+                                            class="text-decoration-none text-primary fs-5 fw-bold">
+                                            {{list.name|capitalize}}
+                                        </a>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="d-flex gap-2 justify-content-end">
+                                            <form action="{{url_for('add_item') }}" method="post">
+                                                <input type="hidden" name="trip_id" value="{{this_trip.id}}">
+                                                <input type="hidden" name="list_id" value="{{list.id}}">
+                                                <input type="hidden" name="list_name" value="{{list.name}}">
+                                                <input type="hidden" name="from_list_button" value="True">
+                                                <button type="submit" class="btn btn-outline-success py-0 px-2">Add Item</button>
+                                            </form>
+                                            {# <div>
+                                                <a href="#" class="btn btn-outline-danger py-0 px-2">Delete List</a>
+                                            </div> #}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% for item in list.items %}
+                                    <tr>
+                                        <td class="ps-4">
+                                            {% if list.items[0].name != None %}
+                                                {{ item.name }}
+                                            {% else %}
+                                                <span class="text-secondary">List empty</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
                         </tbody>
                     </table>
                 {% endif %}

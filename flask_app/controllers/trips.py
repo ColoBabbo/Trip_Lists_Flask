@@ -1,15 +1,16 @@
-from flask import render_template, redirect, request, session, url_for, flash
+from flask import render_template, redirect, request, session, url_for, flash, jsonify
 from flask_app import app
-from flask_app.models import trip
+from flask_app.models import trip, trip_json
 
-@app.get('/dashboard')
-def show_all_trips():
+@app.route('/trip/<int:trip_id>/json')
+def show_one_trip_json(trip_id:int):
     if session.get('logged_in'):
-        all_trips = trip.Trip.get_all()
-        return render_template('show_all_trips.html', all_trips = all_trips)
+        this_trip = trip_json.Trip_JSON.get_one(trip_id)
+        return jsonify({'this_trip_JSON' : this_trip})
     else:
         flash('Please Login', 'login')
     return redirect('/')
+
 
 @app.get('/trip/<int:trip_id>')
 def show_one_trip(trip_id:int):
@@ -27,6 +28,15 @@ def show_one_trip(trip_id:int):
                 'list_name': '',
             }
         return render_template('show_one_trip.html', this_trip = this_trip, pre_fill = pre_fill)
+    else:
+        flash('Please Login', 'login')
+    return redirect('/')
+
+@app.get('/dashboard')
+def show_all_trips():
+    if session.get('logged_in'):
+        all_trips = trip.Trip.get_all()
+        return render_template('show_all_trips.html', all_trips = all_trips)
     else:
         flash('Please Login', 'login')
     return redirect('/')
