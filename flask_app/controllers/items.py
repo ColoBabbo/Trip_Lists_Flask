@@ -14,12 +14,14 @@ def add_item() -> None:
                     'name': session['item_attempt']['name'],
                     'unit': session['item_attempt']['unit'],
                     'quantity': session['item_attempt']['quantity'],
+                    'is_packed': session['item_attempt']['is_packed'],
                 }
             else:
                 pre_fill = {
                     'name': '',
                     'unit': '',
                     'quantity': '',
+                    'is_packed': False,
                 }
             return render_template('new_item.html', pre_fill = pre_fill)
         elif request.method == "POST":
@@ -55,12 +57,14 @@ def show_one_item(trip_id:int, list_id:int, item_id:int):
                     'name': session['item_attempt']['name'],
                     'unit': session['item_attempt']['unit'],
                     'quantity': session['item_attempt']['quantity'],
+                    'is_packed': session['item_attempt']['is_packed'],
                 }
             else:
                 pre_fill = {
                     'name': this_item.name,
                     'unit': this_item.unit,
                     'quantity': this_item.quantity,
+                    'is_packed': this_item.is_packed,
                 }
             return render_template('show_one_item.html', trip_id = trip_id, pre_fill = pre_fill, list_id = list_id, this_item = this_item)
         elif request.method == "POST":

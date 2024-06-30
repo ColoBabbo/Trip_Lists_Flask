@@ -76,7 +76,10 @@
                                         </a>
                                     </td>
                                     <td class="text-end">
-                                        CHECKBOX HERE
+                                        <div class="">
+                                            <input class="form-check-input me-2" type="checkbox" name="is_packed" id="is_packed" {{'checked' if pre_fill['is_packed'] else ''}} placeholder="">
+                                            <label class="form-label mb-0" for="is_packed">Packed</label>
+                                        </div>
                                     </td>
                                 </tr>
                                 {% else %}

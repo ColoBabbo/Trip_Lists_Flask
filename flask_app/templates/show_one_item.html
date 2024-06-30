@@ -73,6 +73,28 @@
                         {% endwith %}
                     </div>
 
+                    <div class="input-group mb-3">
+                        {# <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input"> #}
+                        <div class="form-control bg-secondary">
+                            <input class="form-check-input me-2" type="checkbox" name="is_packed" id="is_packed" {{'checked' if pre_fill['is_packed'] else ''}} placeholder="">
+                            <label class="form-label mb-0" for="is_packed">Is it Packed?</label>
+                        </div>
+                        {% with messages = get_flashed_messages(category_filter=['is_packed']) %}
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="form-text text-danger ps-3">{{ message }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+
+                    {# <div class="input-group mb-3">
+                        <div class="input-group-text">
+                            <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input">
+                        </div>
+                        <input type="text" class="form-control" aria-label="Text input with checkbox">
+                    </div> #}
+
                     <input type="hidden" name="user_id" id="user_id" value="{{session['current_login']}}">
                     <input type="hidden" name="trip_id" id="trip_id" value="{{trip_id}}">
                     <input type="hidden" name="list_id" id="list_id" value="{{list_id}}">

@@ -9,7 +9,7 @@ class Item:
         self.name = data['name']
         self.unit = data['unit']
         self.quantity = data['quantity']
-        # self.is_packed = data['is_packed']
+        self.is_packed = data['is_packed']
         self.list_id = data['list_id']
         self.list_name = None
 
@@ -65,7 +65,14 @@ class Item:
     def update_one(cls, form_dict:dict) -> None:
         query = """
                 UPDATE items
-                SET name = %(name)s, unit =  %(unit)s, quantity = %(quantity)s
+                SET name = %(name)s, unit =  %(unit)s, quantity = %(quantity)s, is_packed = %(is_packed)s
                 WHERE id = %(item_id)s;
         """
-        return connectToMySQL(cls.db).query_db(query, form_dict)
+        data = {
+            'name': form_dict['name'],
+            'unit': form_dict['unit'],
+            'quantity': form_dict['quantity'],
+            'is_packed': (1 if form_dict.get('is_packed') else 0),
+            'item_id': form_dict['item_id'],
+        }
+        return connectToMySQL(cls.db).query_db(query, data)

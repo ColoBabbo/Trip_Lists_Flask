@@ -75,6 +75,7 @@ class Trip:
                         'name': each_list['items.name'],
                         'unit': each_list['unit'],
                         'quantity': each_list['quantity'],
+                        'is_packed': each_list['is_packed'],
                         'list_id': each_list['list_id'],
                     }
                     this_trip_item = item.Item(item_data)
@@ -85,6 +86,7 @@ class Trip:
                         'name': each_list['items.name'],
                         'unit': each_list['unit'],
                         'quantity': each_list['quantity'],
+                        'is_packed': each_list['is_packed'],
                         'list_id': each_list['list_id'],
                     }
                     existing_trip_item = item.Item(item_data)
