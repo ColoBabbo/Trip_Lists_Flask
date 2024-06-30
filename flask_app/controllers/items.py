@@ -1,6 +1,6 @@
 from flask import render_template, redirect, request, session, url_for, flash
 from flask_app import app
-from flask_app.models import trip, list, item
+from flask_app.models import trip, item
 
 @app.route('/add_item', methods=["GET", "POST"])
 def add_item() -> None:

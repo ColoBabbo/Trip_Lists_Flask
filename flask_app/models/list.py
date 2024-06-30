@@ -68,3 +68,11 @@ class List:
         """
         return connectToMySQL(cls.db).query_db(query, {"id": list_id})
 
+    @classmethod
+    def update_one(cls, form_dict:dict) -> None:
+        query = """
+                UPDATE lists
+                SET name = %(name)s, trip_id =  %(trip_id)s
+                WHERE id = %(list_id)s;
+        """
+        return connectToMySQL(cls.db).query_db(query, form_dict)
