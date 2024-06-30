@@ -61,7 +61,7 @@
                                     <td>{{trip.location|capitalize}}</td>
                                     <td>{{trip.date.strftime('%B %d, %Y')}}</td>
                                     <td>
-                                        <a href="{{url_for('show_one_trip', trip_id = trip.id)}}" class="btn btn-outline-success py-0 px-2">Details</a>
+                                        {# <a href="{{url_for('show_one_trip', trip_id = trip.id)}}" class="btn btn-outline-success py-0 px-2">Details</a> #}
                                         {% if trip.user_id == session['current_login'] %}
                                             <a href="{{url_for('edit_trip', trip_id = trip.id)}}" class="btn btn-outline-info py-0 px-2">Edit</a>
                                             <a href="{{url_for('delete_trip', trip_id = trip.id)}}" class="btn btn-outline-danger py-0 px-2">Delete</a>
