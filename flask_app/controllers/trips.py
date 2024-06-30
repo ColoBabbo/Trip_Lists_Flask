@@ -110,7 +110,7 @@ def edit_trip(trip_id:int) -> None:
                 updated_trip = trip.Trip.update_one(request.form)
                 if session.get('edit_attempt'):
                     session.pop('edit_attempt')
-                return redirect(url_for('show_all_trips'))
+                return redirect(url_for('show_one_trip', trip_id = trip_id))
             session['edit_attempt'] = request.form
         return redirect(url_for('edit_trip', trip_id = trip_id))
     else:

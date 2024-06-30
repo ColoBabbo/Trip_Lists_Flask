@@ -27,70 +27,97 @@
     </div>
 
     <div class="container py-3 px-3">
-        <div class="">
-            <div class="card mb-3">
-                <div class="card-header d-flex justify-content-between align-items-center border-bottom border-5">
-                    <div>
-                        <p class="h2 fs-3 mb-1">{{this_trip.name|capitalize}} Trip</p>
-                    </div>
-                    <div class="d-flex gap-2">
-                        {% if this_trip.user_id == session['current_login'] %}
-                            <a href="{{url_for('edit_trip', trip_id = this_trip.id)}}" class="btn btn-outline-info py-0 px-2">Edit</a>
-                            <a href="{{url_for('delete_trip', trip_id = this_trip.id)}}" class="btn btn-outline-danger py-0 px-2">Delete</a>
-                        {% endif %}
-                    </div>
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center border-bottom border-5">
+                <div>
+                    <p class="h2 fs-3 mb-1">{{this_trip.name|capitalize}} Trip</p>
                 </div>
-                <div class="card-body">
-                    <div class="d-flex gap-3">
-                        <p class=""><strong>Location:</strong></p>
-                        <p class="">{{this_trip.location}}</p>
+                <div class="d-flex gap-2">
+                    <a href="{{url_for('show_all_trips')}}" 
+                        class="btn btn-outline-info py-0 px-2">
+                        Back to All Trips
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex gap-3 align-items-center">
+                        <p class="mb-0"><strong>Location:</strong></p>
+                        <p class="mb-0">{{this_trip.location}}</p>
                     </div>
+                    <a href="{{url_for('edit_trip', trip_id = this_trip.id)}}" class="btn btn-outline-secondary py-0 px-2">Edit Trip</a>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
                     <div class="d-flex gap-3">
                         <p class="mb-0"><strong>Trip Date:</strong></p>
                         <p class="mb-0">{{this_trip.date.strftime('%B %d, %Y')}}</p>
                     </div>
+                    <a href="{{url_for('delete_trip', trip_id = this_trip.id)}}" class="btn btn-outline-danger py-0 px-2">Delete Trip</a>
                 </div>
             </div>
-            <div class="card mb-3">
-                <span class="card-header h2 fs-3 border-bottom border-5">Lists</span>
-                <div class="card-body pt-1">
-                    {% if this_trip.lists[0].name != none %}
-                        <table class="table mb-0 ">
-                            <tbody>
-                                {% for list in this_trip.lists %}
+        </div>
+        <div class="card mb-3">
+            <span class="card-header h2 fs-3 border-bottom border-5">Lists</span>
+            <div class="card-body pt-1">
+                {% if this_trip.lists %}
+                    <table class="table mb-0 ">
+                        <tbody>
+                            {% for list in this_trip.lists.values() %}
+                                <tr>
+                                    <td class="">
+                                        <a href="{{url_for('show_one_list', trip_id = this_trip.id, list_id = list.id)}}" 
+                                            class="text-decoration-none text-primary fs-5 fw-bold">
+                                            {{list.name|capitalize}}
+                                        </a>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="d-flex gap-2 justify-content-end">
+                                            <form action="{{url_for('add_item') }}" method="post">
+                                                <input type="hidden" name="trip_id" value="{{this_trip.id}}">
+                                                <input type="hidden" name="list_id" value="{{list.id}}">
+                                                <input type="hidden" name="list_name" value="{{list.name}}">
+                                                <input type="hidden" name="from_list_button" value="True">
+                                                <button type="submit" class="btn btn-outline-success py-0 px-2">Add Item</button>
+                                            </form>
+                                            {# <div>
+                                                <a href="#" class="btn btn-outline-danger py-0 px-2">Delete List</a>
+                                            </div> #}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% for item in list.items %}
                                     <tr>
-                                        <td class=""><a href="#" class="text-decoration-none text-primary fs-6 fw-bold">{{list.name|capitalize}}</a></td>
-                                        <td class="text-end">
-                                            <a href="#" class="btn btn-outline-success py-0 px-2">Details</a>
-                                            <a href="#" class="btn btn-outline-info py-0 px-2">Edit</a>
-                                            <a href="#" class="btn btn-outline-danger py-0 px-2">Delete</a>
+                                        <td class="ps-4">
+                                            {% if list.items[0].name != None %}
+                                                {{ item.name }}
+                                            {% else %}
+                                                <span class="text-secondary">List empty</span>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 {% endfor %}
-                            </tbody>
-                        </table>
-                    {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
 
-                    <form action="{{url_for('add_list')}}" method="post" class="mt-3">
-                        <div class="input-group">
-                            <input type="text" class="form-control border-primary" id="list_name" name="list_name" value="{{pre_fill['list_name']}}" placeholder="Add a List">
-                            <button class="btn btn-outline-primary" type="submit">Create</button>
-                        </div>
-                        {% with messages = get_flashed_messages(category_filter=['list_name']) %}
-                            {% if messages %}
-                                {% for message in messages %}
-                                    <div class="form-text text-danger ps-3">{{ message }}</div>
-                                {% endfor %}
-                            {% endif %}
-                        {% endwith %}
-                        <input type="hidden" name="trip_id" value="{{this_trip.id}}">
-                    </form>
+                <form action="{{url_for('add_list')}}" method="post" class="mt-3">
+                    <div class="input-group">
+                        <input type="text" class="form-control border-primary" id="list_name" name="list_name" value="{{pre_fill['list_name']}}" placeholder="Add a List">
+                        <button class="btn btn-outline-primary" type="submit">Create</button>
+                    </div>
+                    {% with messages = get_flashed_messages(category_filter=['list_name']) %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="form-text text-danger ps-3">{{ message }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    <input type="hidden" name="trip_id" value="{{this_trip.id}}">
+                </form>
 
-                </div>
             </div>
-
         </div>
-
     </div>
 </body>
 </html>

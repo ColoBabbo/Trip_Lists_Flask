@@ -9,9 +9,11 @@ class List:
         self.id = data['id']
         self.name = data['name']
         self.trip_id = data['trip_id']
-        self.created_at = data['created_at']
-        self.updated_at = data['updated_at']
         self.trip = {}
+        self.items = []
+
+    def __repr__(self) -> str:
+        return f'List & id: {self.name} {self.id}, \n Items: {self.items}'
 
     @classmethod
     def get_all (cls):
@@ -28,8 +30,6 @@ class List:
                 'name': list['name'],
                 'location': list['location'],
                 'date': list['date'],
-                'created_at': list['trips.created_at'],
-                'updated_at': list['trips.updated_at'],
             }
             this_list_trip = trip.Trip(trip_data)
             this_list.trip = this_list_trip
@@ -39,8 +39,6 @@ class List:
 
     @classmethod
     def insert_one(cls, form_dict:dict) -> int:
-        print('WE MADE IT INTO INSERT ONE LIST!')
-        print(f'{form_dict}')
         query = """
                 INSERT INTO lists (name, trip_id)
                 VALUES (%(name)s, %(trip_id)s);
@@ -53,16 +51,28 @@ class List:
 
     @classmethod
     def is_legit_list(cls, form_dict:dict) -> bool:
-        print(f'33333333333333333333')
         valid_input = True
         if not len(form_dict.get('list_name')) > 0 :
             flash('Your list needs a name!', 'list_name')
             valid_input = False
-            print(f'Needs a name 33333333333333333333')
-
         elif not len(form_dict.get('list_name')) >= 3:
             flash('Name must be at least 3 characters.', 'list_name')
             valid_input = False
-            print(f'Name too short 33333333333333333333')
-
         return valid_input
+
+    @classmethod
+    def delete_one(cls, list_id:int) -> None:
+        query = """
+                DELETE FROM lists
+                WHERE id = %(id)s;
+        """
+        return connectToMySQL(cls.db).query_db(query, {"id": list_id})
+
+    @classmethod
+    def update_one(cls, form_dict:dict) -> None:
+        query = """
+                UPDATE lists
+                SET name = %(name)s, trip_id =  %(trip_id)s
+                WHERE id = %(list_id)s;
+        """
+        return connectToMySQL(cls.db).query_db(query, form_dict)
