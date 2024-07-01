@@ -48,7 +48,7 @@ class Item:
             this_result = results[0]
             this_item = cls(this_result)
             this_item.list_name = this_result['lists.name']
-            print(f'{this_item.list_name}')
+            # print(f'{this_item.list_name}')
             return this_item
         else:
             return False
@@ -72,7 +72,7 @@ class Item:
             'name': form_dict['name'],
             'unit': form_dict['unit'],
             'quantity': form_dict['quantity'],
-            'is_packed': (1 if form_dict.get('is_packed') else 0),
+            'is_packed': (1 if form_dict['is_packed'] == 'true' else 0),
             'item_id': form_dict['item_id'],
         }
         return connectToMySQL(cls.db).query_db(query, data)

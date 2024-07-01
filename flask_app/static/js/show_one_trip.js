@@ -6,7 +6,7 @@ async function get_one_trip_json( trip_id ){
 get_one_trip_json(trip_id)
 
 async function parse_json_for_one_trip (results)  {
-    console.log(results)
+    // console.log(results)
     let data  = results.this_trip_json
     let this_trip = {
         id : data[0].id,
@@ -45,7 +45,7 @@ async function parse_json_for_one_trip (results)  {
 const render_for_one_trip = (this_trip) => {
     let lists_table = document.getElementById('lists_table')
     let output = ``
-    console.log (this_trip.lists)
+    // console.log (this_trip.lists)
     for(let each_list in this_trip.lists ) {
         let this_list = this_trip.lists[each_list]
         output += `

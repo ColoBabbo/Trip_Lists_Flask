@@ -12,6 +12,7 @@
         let list_id = {{ list_id|tojson }}
         let pre_fill = {{ pre_fill|tojson }}
     </script>
+    <script src="{{url_for ('static', filename='/js/item_is_packed.js')}}" defer></script>
     <script src="{{url_for ('static', filename='/js/show_one_list.js')}}" defer></script>
     <title>{{this_trip.name}}: {{this_trip.lists[list_id].name}} list</title>
 </head>
@@ -62,9 +63,6 @@
                 </div>
             </div>
 
-            <div >
-            </div>
-
             <div class="card mb-3">
                 <div class="card-header h2 fs-3 border-bottom border-5 d-flex justify-content-between align-items-center">
                     <div class="gap-2">
@@ -75,7 +73,7 @@
                 </div>
                 <div class="card-body pt-0">
                     <table class="table mb-0 ">
-                        <tbody id="items_table">
+                        <tbody id="items_table"> {# ITEMS TABLE HERE #}
                         </tbody>
                     </table>
 

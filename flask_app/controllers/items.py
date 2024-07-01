@@ -2,6 +2,35 @@ from flask import render_template, redirect, request, session, url_for, flash, j
 from flask_app import app
 from flask_app.models import trip, item
 
+@app.post('/trip/<int:trip_id>/list/<int:list_id>/item/<int:item_id>/edit/json')
+def edit_item(trip_id:int, list_id:int, item_id:int) -> None:
+    print(request.form)
+    # this_trip = trip.Trip.get_one(trip_id)
+
+    # if not this_trip:
+    #     flash('No such record!', 'unauthorized')
+    #     return redirect(url_for('show_all_trips'))
+    # elif this_trip.user_id != session.get('current_login'):
+    #     flash("That's not yours!", 'unauthorized')
+    #     return redirect(url_for('show_all_trips'))
+    # if session.get('logged_in'):
+    #     if item.Item.is_legit_trip(request.form):
+    updated_item = item.Item.update_one(request.form)
+    #         if session.get('edit_attempt'):
+    #             session.pop('edit_attempt')
+    #         return jsonify()
+    #     session['edit_attempt'] = request.form
+    #     return redirect(url_for('show_one_list', list_id = list_id))
+    # else:
+    #     flash('Please Login', 'login')
+    return jsonify({'return_item':request.form})
+
+# @app.post('/item/<int:item_id>')
+# def edit_item(item_id:int) -> None:
+#     print (item_id)
+#     return redirect('/')
+
+
 @app.route('/add_item', methods=["GET", "POST"])
 def add_item() -> None:
     if session.get('logged_in'):

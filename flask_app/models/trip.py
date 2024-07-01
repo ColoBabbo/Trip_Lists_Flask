@@ -32,7 +32,7 @@ class Trip:
                 WHERE trips.id = %(id)s;
         """
         results = connectToMySQL(cls.db).query_db(query, {'id': trip_id})
-        print(results)
+        # print(results)
         return results
 
     @classmethod
@@ -107,8 +107,8 @@ class Trip:
                         'list_id': each_list['list_id'],
                     }
                     existing_trip_item = item.Item(item_data)
-                    print(f'NNNNNNNNNNNNNNNNNNNNNNNAME {item_data['name']}')    
-                    print(f'IIIIIIIIIIIIIIIIIIIIIISPACKED {item_data['is_packed']}')    
+                    # print(f'NNNNNNNNNNNNNNNNNNNNNNNAME {item_data['name']}')    
+                    # print(f'IIIIIIIIIIIIIIIIIIIIIISPACKED {item_data['is_packed']}')    
                     this_trip.lists[each_list['list_id']].items.append(existing_trip_item)
             return this_trip
         else:
