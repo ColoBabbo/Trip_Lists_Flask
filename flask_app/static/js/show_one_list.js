@@ -71,7 +71,11 @@ const render_for_one_list = (this_trip) => {
         }
         else {
             output += `
-                <span class="text-secondary">List empty</span>
+                <tr>
+                    <td class="">
+                        <span class="text-secondary">List empty</span>
+                    </td>
+                </tr>
             `
         }
     }
