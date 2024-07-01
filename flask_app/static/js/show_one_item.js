@@ -1,4 +1,4 @@
-async function get_one_list_json( trip_id, list_id ){
+async function get_one_list_json( trip_id, list_id){
     fetch(`http://localhost:5000/trip/${trip_id}/list/${list_id}/json`)
         .then( response => response.json() )
         .then( results => parse_json_for_one_list(results) )
@@ -38,57 +38,32 @@ async function parse_json_for_one_list (results)  {
         let current_item_id = data[each_item]['items.id']
         this_trip['lists'][current_list_id].items[current_item_id] = item_data
     }
-    render_for_one_list(this_trip)
+    render_for_one_item(this_trip)
 }
 
-const render_for_one_list = (this_trip) => {
-    let items_table = document.getElementById('items_table')
+const render_for_one_item = (this_trip) => {
+    let item_check_input = document.getElementById('item_check_input')
     let this_list = this_trip.lists[list_id]
+    let this_item = this_list.items[item_id]
     let output = ``
-
-    for(let each_item in this_list.items) {
-        let this_item = this_list.items[each_item]
         if ( this_item.name != null) {
             output += `
-                <tr>
-                    <td class="">
-                        <a href="/trip/${this_trip.id}/list/${this_list.id}/item/${this_item.id}" 
-                            class="text-decoration-none text-primary fs-5 fw-bold">
-                            ${this_item.name}
-                        </a>
-                    </td>
-                    <td class="text-end">
-                        <form action="" id="form_for_item_${this_item.id}">
-                            <div class="">
-                                <input class="form-check-input me-2" type="checkbox" name="is_packed" id="is_packed_for_item_${this_item.id}" 
-                                    ${this_item.is_packed ? 'checked' : ''} placeholder="">
-                                <label class="form-label mb-0" for="is_packed"></label>
-                            </div>
-                        </form>
-                    </td>
-                </tr>
+                <div class="form-control bg-secondary">
+                    <input class="form-check-input me-2" type="checkbox" name="is_packed" id="is_packed_for_item_${this_item.id}" ${this_item.is_packed ? 'checked' : ''} placeholder="">
+                    <label class="form-label mb-0" for="is_packed">Is it Packed?</label>
+                </div>
             `
         }
-        else {
-            output += `
-                <span class="text-secondary">List empty</span>
-            `
-        }
-    }
-    items_table.innerHTML = output
-    add_listeners(this_list)
+    item_check_input.innerHTML = output
+    add_listeners(this_item)
 }
 
-async function add_listeners (this_list) {
-    for(let each_item in this_list.items) {
-        let this_item = this_list.items[each_item]
-        if ( this_item.name != null) {
-            this_item['element'] = document.getElementById(`is_packed_for_item_${this_item.id}`)
-            this_item['form_element'] = document.getElementById(`form_for_item_${this_item.id}`)
-            this_item['element'].addEventListener("change", (event) => {
-                update_checkbox(this_item, event)
-            })
-        }
+async function add_listeners (this_item) {
+    if ( this_item.name != null) {
+        this_item['element'] = document.getElementById(`is_packed_for_item_${this_item.id}`)
+        this_item['element'].addEventListener("change", (event) => {
+            update_checkbox(this_item, event)
+        })
     }
 }
 

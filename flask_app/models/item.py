@@ -62,7 +62,7 @@ class Item:
         return connectToMySQL(cls.db).query_db(query, {"id": item_id})
 
     @classmethod
-    def update_one(cls, form_dict:dict) -> None:
+    def update_one_json(cls, form_dict:dict) -> None:
         query = """
                 UPDATE items
                 SET name = %(name)s, unit =  %(unit)s, quantity = %(quantity)s, is_packed = %(is_packed)s

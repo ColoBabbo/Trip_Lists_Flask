@@ -12,7 +12,6 @@
         let list_id = {{ list_id|tojson }}
         let pre_fill = {{ pre_fill|tojson }}
     </script>
-    <script src="{{url_for ('static', filename='/js/item_is_packed.js')}}" defer></script>
     <script src="{{url_for ('static', filename='/js/show_one_list.js')}}" defer></script>
     <title>{{this_trip.name}}: {{this_trip.lists[list_id].name}} list</title>
 </head>
