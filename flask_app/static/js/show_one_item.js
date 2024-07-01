@@ -48,10 +48,8 @@ const render_for_one_item = (this_trip) => {
     let output = ``
         if ( this_item.name != null) {
             output += `
-                <div class="form-control bg-secondary">
                     <input class="form-check-input me-2" type="checkbox" name="is_packed" id="is_packed_for_item_${this_item.id}" ${this_item.is_packed ? 'checked' : ''} placeholder="">
                     <label class="form-label mb-0" for="is_packed">Is it Packed?</label>
-                </div>
             `
         }
     item_check_input.innerHTML = output

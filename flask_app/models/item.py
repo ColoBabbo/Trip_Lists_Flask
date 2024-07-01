@@ -76,3 +76,19 @@ class Item:
             'item_id': form_dict['item_id'],
         }
         return connectToMySQL(cls.db).query_db(query, data)
+
+    @classmethod
+    def update_one(cls, form_dict:dict) -> None:
+        query = """
+                UPDATE items
+                SET name = %(name)s, unit =  %(unit)s, quantity = %(quantity)s, is_packed = %(is_packed)s
+                WHERE id = %(item_id)s;
+        """
+        data = {
+            'name': form_dict['name'],
+            'unit': form_dict['unit'],
+            'quantity': form_dict['quantity'],
+            'is_packed': (1 if form_dict.get('is_packed') else 0),
+            'item_id': form_dict['item_id'],
+        }
+        return connectToMySQL(cls.db).query_db(query, data)

@@ -82,8 +82,6 @@
 
                     <div class="input-group mb-3">
                         <div class="form-control bg-secondary" id="item_check_input">
-                            <input class="form-check-input me-2" type="checkbox" name="is_packed" id="is_packed" {{'checked' if pre_fill['is_packed'] else ''}} placeholder="">
-                            <label class="form-label mb-0" for="is_packed">Is it Packed?</label>
                         </div>
                         {% with messages = get_flashed_messages(category_filter=['is_packed']) %}
                             {% if messages %}

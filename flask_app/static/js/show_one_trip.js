@@ -45,35 +45,47 @@ async function parse_json_for_one_trip (results)  {
 const render_for_one_trip = (this_trip) => {
     let lists_table = document.getElementById('lists_table')
     let output = ``
-    // console.log (this_trip.lists)
     for(let each_list in this_trip.lists ) {
         let this_list = this_trip.lists[each_list]
-        output += `
-            <tr>
-                <td class="">
-                    <a href="/trip/${this_trip.id}/list/${this_list.id}" 
-                        class="text-decoration-none text-primary fs-5 fw-bold">
-                        ${this_list.name}
-                    </a>
-                </td>
-                <td class="text-end">
-                <div class="d-flex gap-2 justify-content-end">
-                    <form action="/add_item" method="post">
-                        <input type="hidden" name="trip_id" value=" ${this_trip.id}">
-                        <input type="hidden" name="list_id" value=" ${this_list.id}">
-                        <input type="hidden" name="list_name" value=" ${this_list.name}">
-                        <input type="hidden" name="from_list_button" value="True">
-                        <button type="submit" class="btn btn-outline-success py-0 px-2">Add Item</button>
-                    </form>
-                </div>
-            </tr>
-        `
+        if (this_list.name != null) {
+            output += `
+                <tr>
+                    <td class="">
+                        <a href="/trip/${this_trip.id}/list/${this_list.id}" 
+                            class="text-decoration-none text-primary fs-5 fw-bold">
+                            ${this_list.name}
+                        </a>
+                    </td>
+                    <td class="text-end">
+                    <div class="d-flex gap-2 justify-content-end">
+                        <form action="/add_item" method="post">
+                            <input type="hidden" name="trip_id" value=" ${this_trip.id}">
+                            <input type="hidden" name="list_id" value=" ${this_list.id}">
+                            <input type="hidden" name="list_name" value=" ${this_list.name}">
+                            <input type="hidden" name="from_list_button" value="True">
+                            <button type="submit" class="btn btn-outline-success py-0 px-2">Add Item</button>
+                        </form>
+                    </div>
+                </tr>
+            `
         for(let each_item in this_list.items) {
             let this_item = this_list.items[each_item]
             output += `
                 <tr>
                     <td class="ps-4">
                         ${ this_item.name != null ? this_item.name : '<span class="text-secondary">List empty</span>'}
+                    </td>
+                </tr>
+                `
+            }
+        }
+        else {
+            output += `
+                <tr>
+                    <td class="">
+                        <p class="mb-1">
+                            No Lists Yet
+                        </p>
                     </td>
                 </tr>
             `
