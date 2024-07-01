@@ -6,7 +6,6 @@ async function get_one_trip_json( trip_id ){
 get_one_trip_json(trip_id)
 
 async function parse_json_for_one_trip (results)  {
-    // console.log(results)
     let data  = results.this_trip_json
     let this_trip = {
         id : data[0].id,
@@ -34,6 +33,7 @@ async function parse_json_for_one_trip (results)  {
             unit : data[each_item]['unit'],
             quantity : data[each_item]['quantity'],
             is_packed : data[each_item]['is_packed'],
+            list_id : data[each_item]['lists.id'],
         }
         let current_list_id = data[each_item]['lists.id']
         let current_item_id = data[each_item]['items.id']
@@ -42,7 +42,7 @@ async function parse_json_for_one_trip (results)  {
     render_for_one_trip(this_trip)
 }
 
-const render_for_one_trip = (this_trip) => {
+async function render_for_one_trip (this_trip) {
     let lists_table = document.getElementById('lists_table')
     let output = ``
     for(let each_list in this_trip.lists ) {
@@ -68,15 +68,30 @@ const render_for_one_trip = (this_trip) => {
                     </div>
                 </tr>
             `
-        for(let each_item in this_list.items) {
-            let this_item = this_list.items[each_item]
-            output += `
-                <tr>
-                    <td class="ps-4">
-                        ${ this_item.name != null ? this_item.name : '<span class="text-secondary">List empty</span>'}
-                    </td>
-                </tr>
-                `
+            for(let each_item in this_list.items) {
+                let this_item = this_list.items[each_item]
+                if(this_item.name != null) {
+                    output += `
+                        <tr>
+                            <td class="ps-4">
+                                <form action="" class="d-flex gap-3">
+                                    <input type="checkbox" name="is_packed" id="is_packed_for_item_${this_item.id}" 
+                                        ${this_item.is_packed ? 'checked' : ''} >
+                                    <label for="">${this_item.name}</label>
+                                </form>
+                            </td>
+                        </tr>
+                        `
+                }
+                else {
+                    output += `
+                        <tr>
+                            <td class="ps-4">
+                                <span class="text-secondary">List empty</span>
+                            </td>
+                        </tr>
+                    `
+                }
             }
         }
         else {
@@ -92,4 +107,36 @@ const render_for_one_trip = (this_trip) => {
         }
     }
     lists_table.innerHTML = output
+    add_listeners(this_trip)
+}
+
+async function add_listeners (this_trip) {
+    for(let each_list in this_trip.lists ) {
+        let this_list = this_trip.lists[each_list]
+        for(let each_item in this_list.items) {
+            let this_item = this_list.items[each_item]
+            if ( this_item.name != null) {
+                this_item['element'] = document.getElementById(`is_packed_for_item_${this_item.id}`)
+                this_item['element'].addEventListener("change", (event) => {
+                    console.log(this_item)
+                    update_checkbox(this_item, event)
+                })
+            }
+        }
+    }
+}
+
+async function update_checkbox (this_item, event) {
+    let form = new FormData()
+    form.append('name', this_item.name)
+    form.append('unit', this_item.unit)
+    form.append('quantity', this_item.quantity)
+    form.append('is_packed', event.target.checked)
+    form.append('item_id', this_item.id)
+    form.append('trip_id', trip_id)
+    form.append('list_id', this_item.list_id)
+
+    fetch(`http://localhost:5000/trip/${trip_id}/list/${this_item.list_id}/item/${this_item.id}/edit/json`, { method :'POST', body : form})
+        .then( response => response.json() )
+        .then( data => console.log(data) )
 }

@@ -88,13 +88,20 @@
                                 </tr>
                                 {% for item in list.items %}
                                     <tr>
-                                        <td class="ps-4">
-                                            {% if list.items[0].name != None %}
-                                                {{ item.name }}
-                                            {% else %}
+                                        {% if list.items[0].name != None %}
+                                            <td class="ps-4">
+                                                <form action="" class="d-flex gap-3">
+                                                    <input type="checkbox" name="" id="">
+                                                    <label for="">{{ item.name }}</label>
+                                                </form>
+                                            {# </td>
+                                            <td> #}
+                                            </td>
+                                        {% else %}
+                                            <td class="ps-4">
                                                 <span class="text-secondary">List empty</span>
-                                            {% endif %}
-                                        </td>
+                                            </td>
+                                        {% endif %}
                                     </tr>
                                 {% endfor %}
                             {% endfor %}
