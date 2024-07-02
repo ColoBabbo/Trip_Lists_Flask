@@ -58,13 +58,13 @@ async function render_for_one_trip (this_trip) {
         if (this_list.name != null) {
             output += `
                 <tr>
-                    <td class="d-flex gap-2 justify-content-between">
-                        <div class="d-flex gap-2 justify-content-between">
+                    <td class="d-flex justify-content-between">
+                        <div class="d-flex gap-2 align-items-center">
                             <a href="/trip/${this_trip.id}/list/${this_list.id}" 
                                 class="text-decoration-none text-primary fs-5 fw-bold">
                                 ${this_list.name} 
                             </a>
-                            <span class="complete ps-2" style="display: none;">COMPLETE!</span>
+                            <span class="complete fs-5 ps-2">COMPLETE!</span>
                         </div>
                         <div>
                             <form action="/add_item" method="post">
@@ -136,37 +136,56 @@ async function check_for_complete_list_by_html () {
     let all_completes = document.getElementsByClassName('complete')
     // all_list_containers.getElementsByTagName('input')
     // console.log(complete_el)
+    let total_checkbox_elements = []
+    let checked_boxes_per_TRIP_count = 0
     for(let i=0 ; i< all_list_containers.length; i++){
         inputs = all_list_containers[i].getElementsByTagName('input')
         // console.log(`i:${i}`)
         // console.log(`all_list_containers[i]:${all_list_containers[i]}`)
         // console.log(inputs)
-        let boxes = 0
+        let checked_boxes_per_list_count = 0
         for(let j=0; j<inputs.length; j++){
+            total_checkbox_elements.push(inputs[j])
             if (inputs[j].checked){
-                boxes++
+                checked_boxes_per_list_count++
+                checked_boxes_per_TRIP_count++
             }
         }
         // console.log(boxes)
-        if( boxes == inputs.length ) {
+        if( checked_boxes_per_list_count == inputs.length ) {
             if(all_list_containers[i].innerText == "List empty"){
                 console.log(all_list_containers)
                 continue
             }
-            all_list_containers[i].style.backgroundColor = 'darkolivegreen'
+            console.log(`checked boxes ber list:${checked_boxes_per_list_count}, total boxes for trip:${checked_boxes_per_TRIP_count}`)
+            // all_list_containers[i].style.backgroundColor = 'darkolivegreen'
+            all_list_containers[i].className = 'pony table table-hover table-sm table-striped table-success'
             all_completes[i].style.display = 'inline'
+
+            // if(all_list_containers)
         }
         else {
-            all_list_containers[i].style.backgroundColor = 'Revert'
+            // all_list_containers[i].style.backgroundColor = 'Revert'
+            all_list_containers[i].className = 'pony table table-hover table-sm table-striped'
             all_completes[i].style.display = 'none'
         }
+    }
+    
+    all_packed = document.getElementById('final_victory')
+    if( checked_boxes_per_TRIP_count == total_checkbox_elements.length){
+        console.log('all checked')
+        all_packed.style.display = 'block'
+    }
+    else {
+        all_packed.style.display = 'none'
     }
     return
 }
 
 async function render_for_one_list (this_trip) {
     let items_table = document.getElementById('items_table')
-    items_table.className = 'pony'
+    items_table.parentElement.className = 'pony'
+    console.log(items_table)
     let this_list = this_trip.lists[list_id]
     let output = ``
     for(let each_item in this_list.items) {
@@ -174,7 +193,7 @@ async function render_for_one_list (this_trip) {
         if ( this_item.name != null) {
             output += `
                 <tr>
-                    <td class="d-flex justify-content-between align-items-center" style="background-color: transparent" >
+                    <td class="d-flex justify-content-between align-items-center p-2">
                         <form action="" class="" id="form_for_item_${this_item.id}">
                             <div class="">
                                 <input class="form-check-input me-2" type="checkbox" name="is_packed_for_item_${this_item.id}" id="is_packed_for_item_${this_item.id}" 
