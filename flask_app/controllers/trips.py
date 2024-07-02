@@ -1,12 +1,14 @@
-from flask import render_template, redirect, request, session, url_for, flash
+from flask import render_template, redirect, request, session, url_for, flash, jsonify
 from flask_app import app
 from flask_app.models import trip
 
-@app.get('/dashboard')
-def show_all_trips():
+@app.route('/trip/<int:trip_id>/json')
+def show_one_trip_json(trip_id:int):
     if session.get('logged_in'):
-        all_trips = trip.Trip.get_all()
-        return render_template('show_all_trips.html', all_trips = all_trips)
+        this_trip = trip.Trip.get_one_json(trip_id)
+        if session.get('item_attempt'):
+            session.pop('item_attempt')
+        return jsonify({'this_trip_json' : this_trip})
     else:
         flash('Please Login', 'login')
     return redirect('/')
@@ -17,6 +19,9 @@ def show_one_trip(trip_id:int):
         this_trip = trip.Trip.get_one(trip_id)
         if this_trip == False:
             flash('No such record!', 'unauthorized')
+            return redirect(url_for('show_all_trips'))
+        elif this_trip.user.id != session.get('current_login'):
+            flash("That's not yours!", 'unauthorized')
             return redirect(url_for('show_all_trips'))
         if session.get('list_attempt'):
             pre_fill = {
@@ -31,9 +36,22 @@ def show_one_trip(trip_id:int):
         flash('Please Login', 'login')
     return redirect('/')
 
+@app.get('/dashboard')
+def show_all_trips():
+    if session.get('logged_in'):
+        all_trips = trip.Trip.get_all()
+        if session.get('item_attempt'):
+            session.pop('item_attempt')
+        return render_template('show_all_trips.html', all_trips = all_trips)
+    else:
+        flash('Please Login', 'login')
+    return redirect('/')
+
 @app.route('/add_trip', methods=["GET", "POST"])
 def add_trip() -> None:
     if session.get('logged_in'):
+        if session.get('item_attempt'):
+            session.pop('item_attempt')
         if request.method == "GET":
             if session.get('trip_attempt'):
                 pre_fill = {
@@ -65,6 +83,8 @@ def add_trip() -> None:
 @app.get('/trip/<int:trip_id>/delete')
 def delete_trip(trip_id:int) -> None:
     if session.get('logged_in'):
+        if session.get('item_attempt'):
+            session.pop('item_attempt')
         this_trip = trip.Trip.get_one(trip_id)
         if not this_trip:
             flash('No such record!', 'unauthorized')

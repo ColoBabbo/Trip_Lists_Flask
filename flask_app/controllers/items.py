@@ -1,6 +1,11 @@
-from flask import render_template, redirect, request, session, url_for, flash
+from flask import render_template, redirect, request, session, url_for, flash, jsonify
 from flask_app import app
 from flask_app.models import trip, item
+
+@app.post('/trip/<int:trip_id>/list/<int:list_id>/item/<int:item_id>/edit/json')
+def edit_item(trip_id:int, list_id:int, item_id:int) -> None:
+    updated_item = item.Item.update_one_json(request.form)
+    return jsonify({'return_item':request.form})
 
 @app.route('/add_item', methods=["GET", "POST"])
 def add_item() -> None:
@@ -32,7 +37,7 @@ def add_item() -> None:
                         session.pop('item_attempt')
                     if session.get('add_new_item'):
                         session.pop('add_new_item')
-                    return redirect(url_for('show_one_trip', trip_id = request.form['trip_id'], list_id = request.form['list_id']) )
+                    return redirect(url_for('show_one_list', trip_id = request.form['trip_id'], list_id = request.form['list_id']) )
                 return redirect(url_for('add_item') )
             else:
                 session['add_new_item'] = request.form
@@ -52,24 +57,34 @@ def show_one_item(trip_id:int, list_id:int, item_id:int):
             if this_item == False:
                 flash('No such record!', 'unauthorized')
                 return redirect(url_for('show_all_trips'))
+            elif this_item.user_id != session.get('current_login'):
+                flash("That's not yours!", 'unauthorized')
+                return redirect(url_for('show_all_trips'))
             if session.get('item_attempt'):
                 pre_fill = {
                     'name': session['item_attempt']['name'],
                     'unit': session['item_attempt']['unit'],
                     'quantity': session['item_attempt']['quantity'],
-                    'is_packed': session['item_attempt']['is_packed'],
+                    # 'is_packed': session['item_attempt']['is_packed'],
                 }
             else:
                 pre_fill = {
                     'name': this_item.name,
                     'unit': this_item.unit,
                     'quantity': this_item.quantity,
-                    'is_packed': this_item.is_packed,
+                    # 'is_packed': this_item.is_packed,
                 }
             return render_template('show_one_item.html', trip_id = trip_id, pre_fill = pre_fill, list_id = list_id, this_item = this_item)
         elif request.method == "POST":
             if item.Item.is_legit_item(request.form):
-                updated_item = item.Item.update_one(request.form)
+                form_data = {
+                    'name': request.form['name'],
+                    'unit': request.form['unit'],
+                    'quantity': request.form['quantity'],
+                    'is_packed': (1 if request.form.get(f'is_packed_for_item_{item_id}') else 0),
+                    'item_id': request.form['item_id'],
+                }
+                updated_item = item.Item.update_one(form_data)
                 if session.get('item_attempt'):
                     session.pop('item_attempt')
                 return redirect(url_for('show_one_item', trip_id = trip_id, list_id = list_id, item_id = item_id))
@@ -99,4 +114,3 @@ def delete_item(trip_id:int, list_id:int, item_id:int) -> None:
     else:
         flash('Please Login', 'login')
     return redirect('/')
-

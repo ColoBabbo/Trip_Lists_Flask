@@ -1,8 +1,8 @@
-from flask import flash, session
+from flask import flash
 from flask_app.config.mysqlconnection import connectToMySQL
-from flask_app.models import list, user, item
+from flask_app.models import list, user, item, trip
 
-class Trip:
+class Trip_JSON:
     db = 'trip_lists_flask_db'
 
     def __init__(self, data:dict) -> None:
@@ -19,7 +19,28 @@ class Trip:
         return f'Trip {self.name}, self.lists = {self.lists}'
 
     @classmethod
-    def get_one_json(cls, trip_id:int) -> object:
+    def get_all(cls) -> list:
+        query = """
+                SELECT * FROM trips
+                LEFT JOIN users ON trips.user_id = users.id;
+        """
+        results = connectToMySQL(cls.db).query_db(query)
+        all_trips = []
+        for trip in results:
+            this_trip = cls(trip)
+            user_data = {
+                'id': trip['users.id'],
+                'first_name': trip['first_name'],
+                'last_name': trip['last_name'],
+                'email': trip['email'],
+            }
+            this_trip_user = user.User(user_data)
+            this_trip.user = this_trip_user
+            all_trips.append(this_trip)
+        return all_trips
+
+    @classmethod
+    def get_one(cls, trip_id:int) -> object:
         query = """
                 SELECT trips.id, trips.name, date, days, location, 
                     user_id, users.id, first_name, last_name, email, 
@@ -32,33 +53,10 @@ class Trip:
                 WHERE trips.id = %(id)s;
         """
         results = connectToMySQL(cls.db).query_db(query, {'id': trip_id})
+        print(results)
         return results
 
-    @classmethod
-    def get_all(cls) -> list:
-        query = """
-                SELECT * FROM trips
-                LEFT JOIN users ON trips.user_id = users.id
-                WHERE users.id = %(user_id)s;
-        """
-        results = connectToMySQL(cls.db).query_db(query, {'user_id' : session.get('current_login')})
-        all_trips = []
-        for trip in results:
-            this_trip = cls(trip)
-            user_data = {
-                'id': trip['users.id'],
-                'first_name': trip['first_name'],
-                'last_name': trip['last_name'],
-                'email': trip['email'],
-
-            }
-            this_trip_user = user.User(user_data)
-            this_trip.user = this_trip_user
-            all_trips.append(this_trip)
-        return all_trips
-
-    @classmethod
-    def get_one(cls, trip_id:int) -> object:
+    # def get_one(cls, trip_id:int) -> object:
         query = """
                 SELECT * FROM trips
                 LEFT JOIN users ON trips.user_id = users.id
@@ -108,6 +106,8 @@ class Trip:
                         'list_id': each_list['list_id'],
                     }
                     existing_trip_item = item.Item(item_data)
+                    print(f'NNNNNNNNNNNNNNNNNNNNNNNAME {item_data['name']}')    
+                    print(f'IIIIIIIIIIIIIIIIIIIIIISPACKED {item_data['is_packed']}')    
                     this_trip.lists[each_list['list_id']].items.append(existing_trip_item)
             return this_trip
         else:
