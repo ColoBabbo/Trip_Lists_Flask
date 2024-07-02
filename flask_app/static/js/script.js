@@ -117,7 +117,7 @@ async function render_for_one_trip (this_trip) {
             output += `
                 <tr>
                     <td class="">
-                        <p class="mb-1">
+                        <p class="mb-1 text-secondary">
                             No Lists Yet
                         </p>
                     </td>
@@ -172,7 +172,7 @@ async function check_for_complete_list_by_html () {
     }
     
     all_packed = document.getElementById('final_victory')
-    if( checked_boxes_per_TRIP_count == total_checkbox_elements.length){
+    if( total_checkbox_elements.length > 0 && checked_boxes_per_TRIP_count == total_checkbox_elements.length){
         console.log('all checked')
         all_packed.style.display = 'block'
     }
