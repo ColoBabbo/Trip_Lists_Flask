@@ -20,6 +20,9 @@ def show_one_trip(trip_id:int):
         if this_trip == False:
             flash('No such record!', 'unauthorized')
             return redirect(url_for('show_all_trips'))
+        elif this_trip.user.id != session.get('current_login'):
+            flash("That's not yours!", 'unauthorized')
+            return redirect(url_for('show_all_trips'))
         if session.get('list_attempt'):
             pre_fill = {
                 'list_name': session['list_attempt']['list_name'],

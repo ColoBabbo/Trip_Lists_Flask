@@ -19,6 +19,9 @@ def show_one_list(trip_id:int, list_id:int):
         if not this_trip:
             flash('No such Trip!', 'unauthorized')
             return redirect(url_for('show_all_trips'))
+        elif this_trip.user.id != session.get('current_login'):
+            flash("That's not yours!", 'unauthorized')
+            return redirect(url_for('show_all_trips'))
         if not this_trip.lists.get(list_id):
             flash('No such List!', 'unauthorized')
             return redirect(url_for('show_all_trips'))

@@ -57,6 +57,9 @@ def show_one_item(trip_id:int, list_id:int, item_id:int):
             if this_item == False:
                 flash('No such record!', 'unauthorized')
                 return redirect(url_for('show_all_trips'))
+            elif this_item.user_id != session.get('current_login'):
+                flash("That's not yours!", 'unauthorized')
+                return redirect(url_for('show_all_trips'))
             if session.get('item_attempt'):
                 pre_fill = {
                     'name': session['item_attempt']['name'],

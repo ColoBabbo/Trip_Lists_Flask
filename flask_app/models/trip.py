@@ -1,4 +1,4 @@
-from flask import flash
+from flask import flash, session
 from flask_app.config.mysqlconnection import connectToMySQL
 from flask_app.models import list, user, item
 
@@ -38,9 +38,10 @@ class Trip:
     def get_all(cls) -> list:
         query = """
                 SELECT * FROM trips
-                LEFT JOIN users ON trips.user_id = users.id;
+                LEFT JOIN users ON trips.user_id = users.id
+                WHERE users.id = %(user_id)s;
         """
-        results = connectToMySQL(cls.db).query_db(query)
+        results = connectToMySQL(cls.db).query_db(query, {'user_id' : session.get('current_login')})
         all_trips = []
         for trip in results:
             this_trip = cls(trip)
@@ -49,6 +50,7 @@ class Trip:
                 'first_name': trip['first_name'],
                 'last_name': trip['last_name'],
                 'email': trip['email'],
+
             }
             this_trip_user = user.User(user_data)
             this_trip.user = this_trip_user

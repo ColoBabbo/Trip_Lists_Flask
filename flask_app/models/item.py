@@ -12,6 +12,7 @@ class Item:
         self.is_packed = data['is_packed']
         self.list_id = data['list_id']
         self.list_name = None
+        self.user_id = None
 
     def __repr__(self) -> str:
         return f'Item: {self.name}'
@@ -44,6 +45,7 @@ class Item:
                 SELECT * FROM items
                 LEFT JOIN lists ON items.list_id = lists.id
                 LEFT JOIN trips ON lists.trip_id = trips.id
+                LEFT JOIN users ON users.id = trips.user_id
                 WHERE items.id = %(id)s;
         """
         results = connectToMySQL(cls.db).query_db(query, {'id': item_id})
@@ -51,6 +53,7 @@ class Item:
             this_result = results[0]
             this_item = cls(this_result)
             this_item.list_name = this_result['lists.name']
+            this_item.user_id = this_result['users.id']
             return this_item
         else:
             return False
