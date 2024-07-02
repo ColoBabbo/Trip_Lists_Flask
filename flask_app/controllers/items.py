@@ -4,7 +4,6 @@ from flask_app.models import trip, item
 
 @app.post('/trip/<int:trip_id>/list/<int:list_id>/item/<int:item_id>/edit/json')
 def edit_item(trip_id:int, list_id:int, item_id:int) -> None:
-    print(request.form)
     updated_item = item.Item.update_one_json(request.form)
     return jsonify({'return_item':request.form})
 
@@ -38,7 +37,7 @@ def add_item() -> None:
                         session.pop('item_attempt')
                     if session.get('add_new_item'):
                         session.pop('add_new_item')
-                    return redirect(url_for('show_one_trip', trip_id = request.form['trip_id'], list_id = request.form['list_id']) )
+                    return redirect(url_for('show_one_list', trip_id = request.form['trip_id'], list_id = request.form['list_id']) )
                 return redirect(url_for('add_item') )
             else:
                 session['add_new_item'] = request.form

@@ -58,30 +58,36 @@ async function render_for_one_trip (this_trip) {
         if (this_list.name != null) {
             output += `
                 <tr>
-                    <td class="">
-                        <a href="/trip/${this_trip.id}/list/${this_list.id}" 
-                            class="text-decoration-none text-primary fs-5 fw-bold">
-                            ${this_list.name}
-                        </a>
+                    <td class="d-flex gap-2 justify-content-between">
+                        <div class="d-flex gap-2 justify-content-between">
+                            <a href="/trip/${this_trip.id}/list/${this_list.id}" 
+                                class="text-decoration-none text-primary fs-5 fw-bold">
+                                ${this_list.name} 
+                            </a>
+                            <span class="complete ps-2" style="display: none;">COMPLETE!</span>
+                        </div>
+                        <div>
+                            <form action="/add_item" method="post">
+                                <input type="hidden" name="trip_id" value=" ${this_trip.id}">
+                                <input type="hidden" name="list_id" value=" ${this_list.id}">
+                                <input type="hidden" name="list_name" value=" ${this_list.name}">
+                                <input type="hidden" name="from_list_button" value="True">
+                                <button type="submit" class="btn btn-outline-success py-0 px-2">Add Item</button>
+                            </form>
+                        </div>
                     </td>
-                    <td class="text-end">
-                    <div class="d-flex gap-2 justify-content-end">
-                        <form action="/add_item" method="post">
-                            <input type="hidden" name="trip_id" value=" ${this_trip.id}">
-                            <input type="hidden" name="list_id" value=" ${this_list.id}">
-                            <input type="hidden" name="list_name" value=" ${this_list.name}">
-                            <input type="hidden" name="from_list_button" value="True">
-                            <button type="submit" class="btn btn-outline-success py-0 px-2">Add Item</button>
-                        </form>
-                    </div>
+
                 </tr>
+                <tr>
+                    <td>
+                        <table class="pony">
             `
             for(let each_item in this_list.items) {
                 let this_item = this_list.items[each_item]
                 if(this_item.name != null) {
                     output += `
                         <tr>
-                            <td class="ps-4">
+                            <td class="px-4">
                                 <form action="" class="d-flex gap-3">
                                     <input type="checkbox" name="is_packed" id="is_packed_for_item_${this_item.id}" 
                                         ${this_item.is_packed ? 'checked' : ''} >
@@ -101,6 +107,11 @@ async function render_for_one_trip (this_trip) {
                     `
                 }
             }
+            output += `
+                        </table>
+                    </td>
+                </tr>
+            `
         }
         else {
             output += `
@@ -115,11 +126,47 @@ async function render_for_one_trip (this_trip) {
         }
     }
     lists_table.innerHTML = output
+    check_for_complete_list_by_html()
     add_listeners(this_trip)
+}
+
+async function check_for_complete_list_by_html () {
+    // let all_list_containers = document.getElementsByClassName('list_items_container').input
+    let all_list_containers = document.getElementsByClassName('pony')
+    let all_completes = document.getElementsByClassName('complete')
+    // all_list_containers.getElementsByTagName('input')
+    // console.log(complete_el)
+    for(let i=0 ; i< all_list_containers.length; i++){
+        inputs = all_list_containers[i].getElementsByTagName('input')
+        // console.log(`i:${i}`)
+        // console.log(`all_list_containers[i]:${all_list_containers[i]}`)
+        // console.log(inputs)
+        let boxes = 0
+        for(let j=0; j<inputs.length; j++){
+            if (inputs[j].checked){
+                boxes++
+            }
+        }
+        // console.log(boxes)
+        if( boxes == inputs.length ) {
+            if(all_list_containers[i].innerText == "List empty"){
+                console.log(all_list_containers)
+                continue
+            }
+            all_list_containers[i].style.backgroundColor = 'darkolivegreen'
+            all_completes[i].style.display = 'inline'
+        }
+        else {
+            all_list_containers[i].style.backgroundColor = 'Revert'
+            all_completes[i].style.display = 'none'
+        }
+    }
+    return
 }
 
 async function render_for_one_list (this_trip) {
     let items_table = document.getElementById('items_table')
+    items_table.className = 'pony'
     let this_list = this_trip.lists[list_id]
     let output = ``
     for(let each_item in this_list.items) {
@@ -127,8 +174,8 @@ async function render_for_one_list (this_trip) {
         if ( this_item.name != null) {
             output += `
                 <tr>
-                    <td class="d-flex justify-content-between align-items-center">
-                        <form action="" id="form_for_item_${this_item.id}">
+                    <td class="d-flex justify-content-between align-items-center" style="background-color: transparent" >
+                        <form action="" class="" id="form_for_item_${this_item.id}">
                             <div class="">
                                 <input class="form-check-input me-2" type="checkbox" name="is_packed_for_item_${this_item.id}" id="is_packed_for_item_${this_item.id}" 
                                     ${this_item.is_packed ? 'checked' : ''} placeholder="">
@@ -142,10 +189,6 @@ async function render_for_one_list (this_trip) {
                             Details
                         </a>
                     </td>
-                    <td>
-                    </td>
-                </tr>
-                <tr>
                 </tr>
             `
         }
@@ -160,7 +203,9 @@ async function render_for_one_list (this_trip) {
         }
     }
     items_table.innerHTML = output
+    check_for_complete_list_by_html()
     add_listeners(this_trip)
+    return
 }
 
 async function render_for_one_item (this_trip) {
@@ -179,7 +224,9 @@ async function render_for_one_item (this_trip) {
         `
     }
     item_check_input.innerHTML = output
+    check_for_complete_list_by_html()
     add_listeners(this_trip)
+    return
 }
 
 async function add_listeners (this_trip) {
@@ -192,14 +239,15 @@ async function add_listeners (this_trip) {
             if ( this_item.name != null) {
                 this_item['element'] = document.getElementById(`is_packed_for_item_${this_item.id}`)
                 this_item['element'].addEventListener("change", (event) => {
-                    update_checkbox(this_item, event)
+                    update_checkbox(this_trip, this_item, event)
                 })
             }
         }
     }
+    return
 }
 
-async function update_checkbox (this_item, event) {
+async function update_checkbox (this_trip, this_item, event) {
     let form = new FormData()
     form.append('name', this_item.name)
     form.append('unit', this_item.unit)
@@ -211,5 +259,25 @@ async function update_checkbox (this_item, event) {
 
     fetch(`http://localhost:5000/trip/${trip_id}/list/${this_item.list_id}/item/${this_item.id}/edit/json`, { method :'POST', body : form})
         .then( response => response.json() )
-        .then( data => console.log(data) )
+        .then( data => check_for_complete_list_by_html() )
+    return
 }
+
+async function check_for_complete_list_by_items (this_trip, this_item) {
+    for(let each_list in this_trip.lists ) {
+        let this_list = this_trip.lists[each_list]
+        if (this_list.id == this_item.list_id) {
+            let sum_of_checks = 0
+            for(let each_item in this_list.items) {
+                let this_item = this_list.items[each_item]
+                if(this_item.name != null) {
+                    console.log(`Trip: ${this_trip.name}   List: ${this_list.name}   Item: ${this_item.name}   Packed: ${this_item.is_packed}`)
+                    sum_of_checks += this_item.is_packed
+                    console.log(sum_of_checks)
+                }
+            }
+        }
+    }
+    return
+}
+

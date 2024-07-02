@@ -34,7 +34,7 @@ class Item:
             flash('Item Name must be at least 3 characters.', 'name')
             valid_input = False
         if not float(form_dict.get('quantity')) > 0:
-            flash('Item must have a quantity', 'quantity')
+            flash('Quantity must be greater than 0.', 'quantity')
             valid_input = False
         return valid_input
 
@@ -51,7 +51,6 @@ class Item:
             this_result = results[0]
             this_item = cls(this_result)
             this_item.list_name = this_result['lists.name']
-            # print(f'{this_item.list_name}')
             return this_item
         else:
             return False

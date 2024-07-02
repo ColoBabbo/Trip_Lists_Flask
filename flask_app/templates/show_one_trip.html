@@ -38,7 +38,7 @@
                     <a href="{{url_for('show_one_trip', trip_id = this_trip.id)}}" 
                         class="text-decoration-none h2 fs-3 mb-1">
                         <span class="fs-5">Trip:</span>
-                        {{this_trip.name|capitalize}}
+                        {{this_trip.name}}
                     </a>
 
                 </div>
@@ -67,7 +67,7 @@
             </div>
         </div>
         <div class="card mb-3">
-            <span class="card-header h2 fs-3 border-bottom border-5">Lists</span>
+            <span class="card-header h2 fs-3 border-bottom border-5">{{this_trip.name}} Lists</span>
             <div class="card-body pt-1">
                 {% if this_trip.lists %}
                     <table class="table mb-0 ">
