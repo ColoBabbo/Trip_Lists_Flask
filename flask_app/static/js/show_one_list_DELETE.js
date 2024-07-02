@@ -1,5 +1,5 @@
 async function get_one_list_json( trip_id, list_id ){
-    fetch(`http://localhost:5000/trip/${trip_id}/list/${list_id}/json`)
+    fetch(`http://localhost:5000/trip/${trip_id}/json`)
         .then( response => response.json() )
         .then( results => parse_json_for_one_list(results) )
 }
@@ -88,7 +88,6 @@ async function add_listeners (this_list) {
         let this_item = this_list.items[each_item]
         if ( this_item.name != null) {
             this_item['element'] = document.getElementById(`is_packed_for_item_${this_item.id}`)
-            this_item['form_element'] = document.getElementById(`form_for_item_${this_item.id}`)
             this_item['element'].addEventListener("change", (event) => {
                 update_checkbox(this_item, event)
             })

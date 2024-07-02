@@ -39,7 +39,15 @@ async function parse_json_for_one_trip (results)  {
         let current_item_id = data[each_item]['items.id']
         this_trip['lists'][current_list_id].items[current_item_id] = item_data
     }
-    render_for_one_trip(this_trip)
+    if ( typeof item_id !== 'undefined' ){
+        render_for_one_item(this_trip)
+    }
+    else if ( typeof list_id !== 'undefined' ){
+        render_for_one_list(this_trip)
+    }
+    else {
+        render_for_one_trip(this_trip)
+    }
 }
 
 async function render_for_one_trip (this_trip) {
@@ -77,11 +85,11 @@ async function render_for_one_trip (this_trip) {
                                 <form action="" class="d-flex gap-3">
                                     <input type="checkbox" name="is_packed" id="is_packed_for_item_${this_item.id}" 
                                         ${this_item.is_packed ? 'checked' : ''} >
-                                    <label for="">${this_item.name}</label>
+                                    <label for="is_packed_for_item_${this_item.id}">${this_item.name}</label>
                                 </form>
                             </td>
                         </tr>
-                        `
+                    `
                 }
                 else {
                     output += `
@@ -110,15 +118,80 @@ async function render_for_one_trip (this_trip) {
     add_listeners(this_trip)
 }
 
+async function render_for_one_list (this_trip) {
+    let items_table = document.getElementById('items_table')
+    let this_list = this_trip.lists[list_id]
+    let output = ``
+    for(let each_item in this_list.items) {
+        let this_item = this_list.items[each_item]
+        if ( this_item.name != null) {
+            output += `
+                <tr>
+                    <td class="d-flex justify-content-between align-items-center">
+                        <form action="" id="form_for_item_${this_item.id}">
+                            <div class="">
+                                <input class="form-check-input me-2" type="checkbox" name="is_packed_for_item_${this_item.id}" id="is_packed_for_item_${this_item.id}" 
+                                    ${this_item.is_packed ? 'checked' : ''} placeholder="">
+                                <label class="form-label mb-0" for="is_packed_for_item_${this_item.id}">
+                                    ${this_item.name}
+                                </label>
+                            </div>
+                        </form>
+                        <a href="/trip/${this_trip.id}/list/${this_list.id}/item/${this_item.id}" 
+                            class="btn btn-sm btn-outline-info text-decoration-none py-0 px-2">
+                            Details
+                        </a>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                </tr>
+            `
+        }
+        else {
+            output += `
+                <tr>
+                    <td class="">
+                        <span class="text-secondary">List empty</span>
+                    </td>
+                </tr>
+            `
+        }
+    }
+    items_table.innerHTML = output
+    add_listeners(this_trip)
+}
+
+async function render_for_one_item (this_trip) {
+    let item_check_input = document.getElementById('item_check_input')
+    let this_list = this_trip.lists[list_id]
+    let this_item = this_list.items[item_id]
+    let output = ``
+    if ( this_item.name != null) {
+        output += `
+            <input class="form-check-input me-2" type="checkbox" 
+                name="is_packed_for_item_${this_item.id}" id="is_packed_for_item_${this_item.id}" 
+                ${this_item.is_packed ? 'checked' : ''} placeholder="">
+            <label class="form-label mb-0" for="is_packed_for_item_${this_item.id}">
+                Is it Packed?
+            </label>
+        `
+    }
+    item_check_input.innerHTML = output
+    add_listeners(this_trip)
+}
+
 async function add_listeners (this_trip) {
-    for(let each_list in this_trip.lists ) {
+    for( let each_list in this_trip.lists ){
         let this_list = this_trip.lists[each_list]
-        for(let each_item in this_list.items) {
+        if ( typeof list_id !== 'undefined' && this_list.id != list_id ){ continue; }
+        for( let each_item in this_list.items ){
             let this_item = this_list.items[each_item]
+            if ( typeof item_id !== 'undefined' && this_item.id != item_id ){ continue; }
             if ( this_item.name != null) {
                 this_item['element'] = document.getElementById(`is_packed_for_item_${this_item.id}`)
                 this_item['element'].addEventListener("change", (event) => {
-                    console.log(this_item)
                     update_checkbox(this_item, event)
                 })
             }

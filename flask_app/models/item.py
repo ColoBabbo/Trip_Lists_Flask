@@ -33,7 +33,7 @@ class Item:
         elif not len(form_dict.get('name')) >= 3:
             flash('Item Name must be at least 3 characters.', 'name')
             valid_input = False
-        if not form_dict.get('quantity') > 0:
+        if not float(form_dict.get('quantity')) > 0:
             flash('Item must have a quantity', 'quantity')
             valid_input = False
         return valid_input

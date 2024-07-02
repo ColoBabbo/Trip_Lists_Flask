@@ -93,4 +93,6 @@ def logout() -> None:
         session.pop('trip_attempt')
     if session.get('edit_attempt'):
         session.pop('edit_attempt')
+    if session.get('item_attempt'):
+        session.pop('item_attempt')
     return redirect('/')

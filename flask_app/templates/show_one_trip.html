@@ -10,7 +10,7 @@
     <script>
         let trip_id = {{ this_trip.id|tojson }}
     </script>
-    <script src="{{url_for ('static', filename='/js/show_one_trip.js')}}" defer></script>
+    <script src="{{url_for ('static', filename='/js/script.js')}}" defer></script>
     <title>{{this_trip.name}}</title>
 </head>
 <body>
@@ -34,7 +34,13 @@
         <div class="card mb-3">
             <div class="card-header d-flex justify-content-between align-items-center border-bottom border-5">
                 <div>
-                    <p class="h2 fs-3 mb-1">{{this_trip.name|capitalize}} Trip</p>
+                    {# <p class="h2 fs-3 mb-1">{{this_trip.name|capitalize}} Trip</p> #}
+                    <a href="{{url_for('show_one_trip', trip_id = this_trip.id)}}" 
+                        class="text-decoration-none h2 fs-3 mb-1">
+                        <span class="fs-5">Trip:</span>
+                        {{this_trip.name|capitalize}}
+                    </a>
+
                 </div>
                 <div class="d-flex gap-2">
                     <a href="{{url_for('show_all_trips')}}" 
