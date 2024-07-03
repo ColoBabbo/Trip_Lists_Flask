@@ -90,7 +90,6 @@ def show_one_item(trip_id:int, list_id:int, item_id:int):
                 return redirect(url_for('show_one_item', trip_id = trip_id, list_id = list_id, item_id = item_id))
             session['item_attempt'] = request.form
         return redirect(url_for('show_one_item', trip_id = trip_id, list_id = list_id, item_id = item_id))
-
     else:
         flash('Please Login', 'login')
     return redirect('/')
@@ -108,7 +107,6 @@ def delete_item(trip_id:int, list_id:int, item_id:int) -> None:
         elif this_trip.user_id != session.get('current_login'):
             flash("That's not yours!", 'unauthorized')
             return redirect(url_for('show_all_trips'))
-
         item.Item.delete_one(item_id)
         return redirect(url_for('show_one_list', trip_id = trip_id, list_id = list_id))
     else:

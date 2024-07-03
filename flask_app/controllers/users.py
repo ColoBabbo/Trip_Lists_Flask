@@ -6,7 +6,7 @@ from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt(app)
 
 import time
-currently_testing = True
+currently_testing = False
 
 @app.route('/')
 def index() -> None:

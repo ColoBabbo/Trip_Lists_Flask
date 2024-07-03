@@ -22,8 +22,7 @@
                             <div class="form-floating mb-3">
                                 <input class="form-control" type="text" name="first_name" id="first_name"
                                     value="{{ pre_fill['first_name'] }}" placeholder="">
-                                <label class="form-label"
-                                    for="first_name">First Name:</label>
+                                <label class="form-label" for="first_name">First Name:</label>
                                 {% with messages = get_flashed_messages(category_filter=['first']) %}
                                     {% if messages %}
                                         {% for message in messages %}
@@ -36,8 +35,7 @@
                             <div class="form-floating mb-3">
                                 <input class="form-control" type="text" name="last_name" id="last_name"
                                     value="{{ pre_fill['last_name'] }}" placeholder="">
-                                <label class="form-label"
-                                    for="last_name">Last Name:</label>
+                                <label class="form-label" for="last_name">Last Name:</label>
                                 {% with messages = get_flashed_messages(category_filter=['last']) %}
                                     {% if messages %}
                                         {% for message in messages %}
@@ -50,8 +48,7 @@
                             <div class="form-floating mb-3">
                                 <input class="form-control" type="email" name="email" id="email"
                                     value="{{ pre_fill['email'] }}" placeholder="">
-                                <label class="form-label"
-                                    for="email">Email:</label>
+                                <label class="form-label" for="email">Email:</label>
                                 {% with messages = get_flashed_messages(category_filter=['email']) %}
                                     {% if messages %}
                                         {% for message in messages %}
@@ -64,8 +61,7 @@
                             <div class="form-floating mb-3">
                                 <input class="form-control" type="password" name="password" id="password"
                                     value="{{ pre_fill['password'] }}" placeholder="">
-                                <label class="form-label"
-                                    for="password">Password:</label>
+                                <label class="form-label" for="password">Password:</label>
                                 {% with messages = get_flashed_messages(category_filter=['pass']) %}
                                     {% if messages %}
                                         {% for message in messages %}
@@ -78,8 +74,7 @@
                             <div class="form-floating mb-3">
                                 <input class="form-control" type="password" name="confirm_password" id="confirm_password"
                                     value="{{ pre_fill['password'] }}" placeholder="">
-                                <label class="form-label"
-                                    for="confirm_password">Confirm Password:</label>
+                                <label class="form-label" for="confirm_password">Confirm Password:</label>
                             </div>
                             <button class="btn btn-outline-primary" type="submit">Register</button>
                         </form>
@@ -107,13 +102,11 @@
                         <form action="/login" method="post">
                             <div class="form-floating mb-3">
                                 <input class="form-control" type="text" name="login_email" id="login_email" placeholder="">
-                                <label class="form-label"
-                                    for="login_email">Email:</label>
+                                <label class="form-label" for="login_email">Email:</label>
                             </div>
                             <div class="form-floating mb-3">
                                 <input class="form-control" type="password" name="login_password" id="login_password" placeholder="">
-                                <label class="form-label"
-                                    for="login_password">Password:</label>
+                                <label class="form-label" for="login_password">Password:</label>
                             </div>
                             <button class="btn btn-outline-primary" type="submit">Login</button>
                         </form>

@@ -76,7 +76,6 @@ def delete_list(trip_id:int, list_id:int) -> None:
         elif this_trip.user_id != session.get('current_login'):
             flash("That's not yours!", 'unauthorized')
             return redirect(url_for('show_all_trips'))
-
         list.List.delete_one(list_id)
         return redirect(url_for('show_one_trip', trip_id = trip_id))
     else:

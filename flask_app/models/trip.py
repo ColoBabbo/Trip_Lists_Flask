@@ -50,7 +50,6 @@ class Trip:
                 'first_name': trip['first_name'],
                 'last_name': trip['last_name'],
                 'email': trip['email'],
-
             }
             this_trip_user = user.User(user_data)
             this_trip.user = this_trip_user
@@ -87,7 +86,7 @@ class Trip:
                     }
                     this_trip_list = list.List(list_data)
                     this_trip.lists[this_trip_list.id] = this_trip_list
-
+                    
                     item_data = {
                         'id': each_list['items.id'],
                         'name': each_list['items.name'],

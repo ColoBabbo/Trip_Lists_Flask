@@ -221,7 +221,7 @@ async function update_checkbox (this_trip, this_item, event) {
     form.append('item_id', this_item.id)
     form.append('trip_id', trip_id)
     form.append('list_id', this_item.list_id)
-
+    
     fetch(`http://localhost:5000/trip/${trip_id}/list/${this_item.list_id}/item/${this_item.id}/edit/json`, { method :'POST', body : form})
         .then( response => response.json() )
         .then( data => check_for_complete_list_by_html() )
