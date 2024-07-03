@@ -76,7 +76,6 @@ async function render_for_one_trip (this_trip) {
                             </form>
                         </div>
                     </td>
-
                 </tr>
                 <tr>
                     <td>
@@ -128,58 +127,6 @@ async function render_for_one_trip (this_trip) {
     lists_table.innerHTML = output
     check_for_complete_list_by_html()
     add_listeners(this_trip)
-}
-
-async function check_for_complete_list_by_html () {
-    // let all_list_containers = document.getElementsByClassName('list_items_container').input
-    let all_list_containers = document.getElementsByClassName('pony')
-    let all_completes = document.getElementsByClassName('complete')
-    // all_list_containers.getElementsByTagName('input')
-    // console.log(complete_el)
-    let total_checkbox_elements = []
-    let checked_boxes_per_TRIP_count = 0
-    for(let i=0 ; i< all_list_containers.length; i++){
-        inputs = all_list_containers[i].getElementsByTagName('input')
-        // console.log(`i:${i}`)
-        // console.log(`all_list_containers[i]:${all_list_containers[i]}`)
-        // console.log(inputs)
-        let checked_boxes_per_list_count = 0
-        for(let j=0; j<inputs.length; j++){
-            total_checkbox_elements.push(inputs[j])
-            if (inputs[j].checked){
-                checked_boxes_per_list_count++
-                checked_boxes_per_TRIP_count++
-            }
-        }
-        // console.log(boxes)
-        if( checked_boxes_per_list_count == inputs.length ) {
-            if(all_list_containers[i].innerText == "List empty"){
-                console.log(all_list_containers)
-                continue
-            }
-            console.log(`checked boxes ber list:${checked_boxes_per_list_count}, total boxes for trip:${checked_boxes_per_TRIP_count}`)
-            // all_list_containers[i].style.backgroundColor = 'darkolivegreen'
-            all_list_containers[i].className = 'pony table table-hover table-sm table-striped table-success'
-            all_completes[i].style.display = 'inline'
-
-            // if(all_list_containers)
-        }
-        else {
-            // all_list_containers[i].style.backgroundColor = 'Revert'
-            all_list_containers[i].className = 'pony table table-hover table-sm table-striped'
-            all_completes[i].style.display = 'none'
-        }
-    }
-    
-    all_packed = document.getElementById('final_victory')
-    if( total_checkbox_elements.length > 0 && checked_boxes_per_TRIP_count == total_checkbox_elements.length){
-        console.log('all checked')
-        all_packed.style.display = 'block'
-    }
-    else {
-        all_packed.style.display = 'none'
-    }
-    return
 }
 
 async function render_for_one_list (this_trip) {
@@ -282,21 +229,43 @@ async function update_checkbox (this_trip, this_item, event) {
     return
 }
 
-async function check_for_complete_list_by_items (this_trip, this_item) {
-    for(let each_list in this_trip.lists ) {
-        let this_list = this_trip.lists[each_list]
-        if (this_list.id == this_item.list_id) {
-            let sum_of_checks = 0
-            for(let each_item in this_list.items) {
-                let this_item = this_list.items[each_item]
-                if(this_item.name != null) {
-                    console.log(`Trip: ${this_trip.name}   List: ${this_list.name}   Item: ${this_item.name}   Packed: ${this_item.is_packed}`)
-                    sum_of_checks += this_item.is_packed
-                    console.log(sum_of_checks)
-                }
+async function check_for_complete_list_by_html () {
+    let all_list_containers = document.getElementsByClassName('pony')
+    let all_completes = document.getElementsByClassName('complete')
+    let total_checkbox_elements = []
+    let checked_boxes_per_TRIP_count = 0
+    for(let i=0 ; i< all_list_containers.length; i++){
+        inputs = all_list_containers[i].getElementsByTagName('input')
+        let checked_boxes_per_list_count = 0
+        for(let j=0; j<inputs.length; j++){
+            total_checkbox_elements.push(inputs[j])
+            if (inputs[j].checked){
+                checked_boxes_per_list_count++
+                checked_boxes_per_TRIP_count++
             }
         }
+        if( checked_boxes_per_list_count == inputs.length ) {
+            if(all_list_containers[i].innerText == "List empty"){
+                console.log(all_list_containers)
+                continue
+            }
+            console.log(`checked boxes ber list:${checked_boxes_per_list_count}, total boxes for trip:${checked_boxes_per_TRIP_count}`)
+            all_list_containers[i].className = 'pony table table-hover table-sm table-striped table-success'
+            all_completes[i].style.display = 'inline'
+        }
+        else {
+            all_list_containers[i].className = 'pony table table-hover table-sm table-striped'
+            all_completes[i].style.display = 'none'
+        }
+    }
+    
+    all_packed = document.getElementById('final_victory')
+    if( total_checkbox_elements.length > 0 && checked_boxes_per_TRIP_count == total_checkbox_elements.length){
+        console.log('all checked')
+        all_packed.style.display = 'block'
+    }
+    else {
+        all_packed.style.display = 'none'
     }
     return
 }
-
